@@ -11,13 +11,11 @@
 (defn amount-map [tx]
     {(tx "address") (tx "amount")})
 
-(defn pairs->map [pairs]
-    (reduce #(assoc %1 (%2 0) (%2 1)) { } pairs))
-
-
 (defn calculate-transactions [divisions total-held]
-    (pairs->map (map (fn [[addr per]]
-            [addr (* per total-held)]) divisions)))
+    (into { } 
+        (map (fn [[addr per]]
+                [addr (* per total-held)])
+        divisions)))
 
 (defn build-totals [unspent]
     (->> unspent
