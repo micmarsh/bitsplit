@@ -15,22 +15,27 @@
     (reduce #(assoc %1 (%2 0) (%2 1)) { } pairs))
 
 
-(defn calculate-transactions [total-held divisions]
+(defn calculate-transactions [divisions total-held]
     (pairs->map (map (fn [[addr per]]
             [addr (* per total-held)]) divisions)))
 
+(defn build-totals [unspent]
+    (->> unspent
+         (map convert-total)
+         (apply merge-with +)
+         (merge-with calculate-transactions (sample-data))
+         vals
+         (apply merge-with +)))
+
 (defn send-coins []
     (let [unspent (list-unspent)
-          tv ["txid" "vout"]
-          ; amtot ["amount" "address"]
-          tx-hashes (filter-unspent tv unspent)
-          amounts (map convert-total unspent)
-          totals (apply merge-with + amounts)
-          send-amounts (merge-with calculate-transactions
-                        totals
-                        (sample-data))
-          send-totals (apply merge-with + (vals send-amounts))
 
+          n (println "lulz")
+          send-totals (build-totals unspent)
+          n (println "zzzzzz")
+
+          tv ["txid" "vout"]
+          tx-hashes (filter-unspent tv unspent)
           first-hex (btc/createrawtransaction 
                         :txids-map (vec tx-hashes)
                         :addrs-amounts-map send-totals)
@@ -40,8 +45,7 @@
                         :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent)))
 
           done (btc/sendrawtransaction :hexstring (signed "hex"))
-
-          ]
+            ]
          done))
 
 (defn foo
