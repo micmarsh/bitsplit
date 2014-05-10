@@ -1,12 +1,7 @@
 (ns bitsplit.mock
-    (:require [clj-btc.core :as btc]))
+    (:use [bitsplit.bitcoind :only (list-unspent)]))
 
-(def all-unspent 
-    #(btc/listunspent 
-        :minconf 0
-        :maxconf 9999999))
-
-(defn addr-seq [] (map #(% "address") (all-unspent)))
+(defn addr-seq [] (map #(% "address") (list-unspent)))
 
 (defn nrand [start end]
     (-> (- end start)
@@ -39,9 +34,9 @@
 (def pairs->map #(reduce combine-pair { } %))
 
 (defn sample-divisions [addresses]
-    (let [;addresses (map #(% "address") (all-unspent))
-          infaddr (cycle addresses)
-          pairs (map (fn [addr per] [addr (/ per 100)]) infaddr (random-percentages))]
+    (let [infaddr (cycle addresses)
+          pairs (map (fn [addr per] [addr (/ per 100)]) 
+                    infaddr (random-percentages))]
         (pairs->map pairs)))    
 
 (defn sample-data []
