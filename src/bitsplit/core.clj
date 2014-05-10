@@ -8,8 +8,8 @@
 
 (def amount (partial btc/getreceivedbyaddress :bitcoinaddress ))
 
-(defn convert-total [map]
-    {(map "address") (map "amount")})
+(defn amount-map [tx]
+    {(tx "address") (tx "amount")})
 
 (defn pairs->map [pairs]
     (reduce #(assoc %1 (%2 0) (%2 1)) { } pairs))
@@ -21,7 +21,7 @@
 
 (defn build-totals [unspent]
     (->> unspent
-         (map convert-total)
+         (map amount-map)
          (apply merge-with +)
          (merge-with calculate-transactions (sample-data))
          vals
@@ -30,9 +30,7 @@
 (defn send-coins []
     (let [unspent (list-unspent)
 
-          n (println "lulz")
           send-totals (build-totals unspent)
-          n (println "zzzzzz")
 
           tv ["txid" "vout"]
           tx-hashes (filter-unspent tv unspent)
@@ -43,9 +41,8 @@
           signed (btc/signrawtransaction
                         :hexstring first-hex
                         :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent)))
-
-          done (btc/sendrawtransaction :hexstring (signed "hex"))
-            ]
+          feeset (btc/settxfee :amount 0.001M)
+          done (btc/sendrawtransaction :hexstring (signed "hex"))]
          done))
 
 (defn foo

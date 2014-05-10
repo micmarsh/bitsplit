@@ -3,7 +3,7 @@
 
 (def list-unspent 
     #(btc/listunspent 
-        :minconf 0
+        :minconf 1
         :maxconf 9999999))
 
 

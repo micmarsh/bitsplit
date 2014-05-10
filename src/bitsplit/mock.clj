@@ -3,6 +3,17 @@
 
 (defn addr-seq [] (map #(% "address") (list-unspent)))
 
+(def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
+            "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
+            "n2rDFfh5uhY7RZg6opEWdKy24cU3ntXAmN"
+})
+(def set2 #{
+        "mzAWJh9tUqUKFrEHFJEAaxXpLrSFnJMEys"
+        "mgoZxYMjuZcEvfJK31hnUFCW35hfvcPfaD"
+        "mopBDLcHaBZ8Lu32VBFusuHjrbexxngqdt"
+        "mpFjBM87wFXERLSkVZLt9awz4kjzBHrtJD"
+    })
+
 (defn nrand [start end]
     (-> (- end start)
         rand
@@ -26,10 +37,9 @@
                     (- remaining new-amt))))))
 
 (defn combine-pair [map [addr per]]
-    (if (contains? map addr)
-        (let [amount (map addr)]
-            (assoc map addr (+ amount per)))
-        (assoc map addr per)))
+    (if-let [amount (map addr)]
+        (assoc map addr (+ amount per)))
+    (assoc map addr per))
 
 (def pairs->map #(reduce combine-pair { } %))
 
@@ -40,9 +50,10 @@
         (pairs->map pairs)))    
 
 (defn sample-data []
-    (let [all (addr-seq)]
+    (let [all (addr-seq)
+          sample (first all)]
         (pairs->map (map (fn [addr]
-            (let [addresses (set (addr-seq))
+            (let [addresses (if (set1 sample) set2 set1)
                   other (disj addresses addr)]
                   [addr (sample-divisions other)]))
         all))))
