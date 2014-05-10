@@ -28,9 +28,28 @@
                     (conj created new-amt)
                     (- remaining new-amt))))))
 
-(def sample-divisions 
-    (let [addresses (map #(% "address") (all-unspent))]
-        ))
+(defn combine-pair [map [addr per]]
+    (if (contains? map addr)
+        (let [amount (map addr)]
+            (assoc map addr (+ amount per)))
+        (assoc map addr per)))
+(def pairs->map #(reduce combine-pair { } %))
+
+(defn sample-divisions [addresses]
+    (let [;addresses (map #(% "address") (all-unspent))
+          infaddr (cycle addresses)
+          pairs (map (fn [addr per] [addr (/ per 100)]) infaddr (random-percentages))]
+        (pairs->map pairs)))    
+
+(defn addr-seq [] (map #(% "address") (all-unspent)))
+
+(defn full-division []
+    (let [all (addr-seq)]
+        (pairs->map (map (fn [addr]
+            (let [addresses (set (addr-seq))
+                  other (disj addresses addr)]
+                  [addr (sample-divisions other)]))
+        all))))
 
 (defn foo
   "I don't do a whole lot."
