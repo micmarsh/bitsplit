@@ -4,11 +4,10 @@
 (defn addr-seq [] (map #(% "address") (list-unspent)))
 
 (def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
-            ; comment back in after next round
-            ; "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
+            "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
             "n2rDFfh5uhY7RZg6opEWdKy24cU3ntXAmN"
             ; returning some testnet coins!
-            "msj42CCGruhRsFrGATiUuh25dtxYtnpbTx"
+            ; "msj42CCGruhRsFrGATiUuh25dtxYtnpbTx"
 })
 (def set2 #{
         "mzAWJh9tUqUKFrEHFJEAaxXpLrSFnJMEys"
