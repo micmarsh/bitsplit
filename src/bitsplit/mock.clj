@@ -24,16 +24,12 @@
 
 (def rbool #(-> (rand) (< 0.3)))
 
-(defn random-percentages 
-    ([] 
-        (let [new-amt (nrand 0 100)]
-            (random-percentages 
-                [new-amt]
-                (- 100 new-amt))))
-    ([created remaining]
-        (if (or (= remaining 0) (rbool) )
+(defn random-percentages [total]
+    (loop [created []
+           remaining 100]
+        (if (= (count created) total)
             (conj created remaining)
-            (let [new-amt (nrand 0 remaining)]
+            (let [new-amt (nrand 0 ( * remaining (/ 2 3)))]
                 (recur 
                     (conj created new-amt)
                     (- remaining new-amt))))))
@@ -46,9 +42,9 @@
 (def pairs->map #(reduce combine-pair { } %))
 
 (defn sample-divisions [addresses]
-    (let [infaddr (cycle addresses)
-          pairs (map (fn [addr per] [addr (/ per 100)]) 
-                    infaddr (random-percentages))]
+    (let [pairs (map (fn [addr per] [addr (/ per 100)]) 
+                    addresses 
+                    (-> addresses count random-percentages))]
         (pairs->map pairs)))    
 
 (defn sample-data []

@@ -34,18 +34,19 @@
 
           send-totals (build-totals unspent)
 
-          tv ["txid" "vout"]
-          tx-hashes (filter-unspent tv unspent)
-          first-hex (btc/createrawtransaction 
-                        :txids-map (vec tx-hashes)
-                        :addrs-amounts-map send-totals)
+         ;  tv ["txid" "vout"]
+         ;  tx-hashes (filter-unspent tv unspent)
+         ;  first-hex (btc/createrawtransaction 
+         ;                :txids-map (vec tx-hashes)
+         ;                :addrs-amounts-map send-totals)
 
-          signed (btc/signrawtransaction
-                        :hexstring first-hex
-                        :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent)))
-          feeset (btc/settxfee :amount 0.001M)
-          done (btc/sendrawtransaction :hexstring (signed "hex"))]
-         done))
+         ;  signed (btc/signrawtransaction
+         ;                :hexstring first-hex
+         ;                :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent)))
+         ;  feeset (btc/settxfee :amount 0.001M)
+         ;  done (btc/sendrawtransaction :hexstring (signed "hex"))]
+         ; done))
+        ] send-totals))
 
 (defn foo
   "I don't do a whole lot."
