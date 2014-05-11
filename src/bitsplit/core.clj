@@ -11,7 +11,7 @@
 
 (def idprint (fn [x] (println x) x))
 
-(defn send-transaction [totals unspent]
+(defn send-transaction! [totals unspent]
     (let [get-hex #(% "hex")
           tv ["txid" "vout"]
           tx-hashes (filter-unspent tv unspent)]
@@ -30,7 +30,7 @@
 (defn send-coins []
     (let [unspent (list-unspent)
           totals (build-totals (sample-data) unspent)]
-          (sendrawtransaction totals unspent)))
+          (send-transaction! totals unspent)))
 
 (defn foo
   "I don't do a whole lot."
