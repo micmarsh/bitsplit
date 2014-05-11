@@ -14,7 +14,7 @@
         "mgoZxYMjuZcEvfJK31hnUFCW35hfvcPfaD"
         "mopBDLcHaBZ8Lu32VBFusuHjrbexxngqdt"
         "mpFjBM87wFXERLSkVZLt9awz4kjzBHrtJD"
-        ; my darkwallet?
+        ; my darkwallet
         "n4PNeR1iSDod7DDJgTWmVznVMfHGKhBqjJ"
         ; my wallet on TP's test faucet
         ; "n2aSLh3MefWgJWQ8jrLopmfPNUzQ41tCwi"
@@ -42,8 +42,8 @@
 
 (defn combine-pair [map [addr per]]
     (if-let [amount (map addr)]
-        (assoc map addr (+ amount per)))
-    (assoc map addr per))
+        (assoc map addr (+ amount per))
+        (assoc map addr per)))
 
 (def pairs->map #(reduce combine-pair { } %))
 
@@ -55,10 +55,10 @@
 
 (defn sample-data []
     (let [all (addr-seq)
-          sample (first all)]
-        (pairs->map (map (fn [addr]
+          sample (first all)
+          pairs (map (fn [addr]
             (let [addresses (if (set1 sample) set2 set1)
                   other (disj addresses addr)]
-                  [addr (sample-divisions other)]))
-        all))))
+                  [addr (sample-divisions other)])) all)]
+          (into { } pairs)))
 
