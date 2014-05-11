@@ -4,7 +4,9 @@
     (:require [clj-btc.core :as btc]))
     
 (defn filter-unspent [keys unspent]
-    (map #(select-keys % keys) unspent))
+    (->> unspent
+        (map #(select-keys % keys))
+        vec))
 
 (def amount (partial btc/getreceivedbyaddress :bitcoinaddress ))
 
@@ -17,13 +19,15 @@
                 [addr (* per total-held)])
         divisions)))
 
+(def combine-sum (partial apply merge-with +))
+
 (defn build-totals [unspent]
     (->> unspent
          (map amount-map)
-         (apply merge-with +)
+         combine-sum
          (merge-with calculate-transactions (sample-data))
          vals
-         (apply merge-with +)))
+         combine-sum))
 
 (defn send-coins []
     (let [unspent (list-unspent)
