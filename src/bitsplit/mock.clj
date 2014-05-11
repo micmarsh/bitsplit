@@ -15,7 +15,7 @@
         "mopBDLcHaBZ8Lu32VBFusuHjrbexxngqdt"
         "mpFjBM87wFXERLSkVZLt9awz4kjzBHrtJD"
         ; my wallet on TP's test faucet
-        "n2aSLh3MefWgJWQ8jrLopmfPNUzQ41tCwi"
+        ; "n2aSLh3MefWgJWQ8jrLopmfPNUzQ41tCwi"
     })
 
 (defn nrand [start end]
