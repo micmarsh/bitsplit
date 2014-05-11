@@ -28,7 +28,7 @@
     (loop [created []
            remaining 100]
         (if (= (count created) ( - total 1))
-            (conj created remaining)
+            (map #(java.math.BigDecimal. %) (conj created remaining))
             (let [new-amt (nrand 0 (-> remaining (* 2) (/ 3)))]
                 (recur 
                     (conj created new-amt)
