@@ -7,7 +7,7 @@
             "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
             "n2rDFfh5uhY7RZg6opEWdKy24cU3ntXAmN"
             ; my coinpunk wallet
-            "13GbCpCaT4At8XaEFeyQAwDewFnSUoBLui"
+            ; "13GbCpCaT4At8XaEFeyQAwDewFnSUoBLui"
 })
 (def set2 #{
         "mzAWJh9tUqUKFrEHFJEAaxXpLrSFnJMEys"
