@@ -21,10 +21,16 @@
 
 (def combine-sum (partial apply merge-with +))
 
+(def address-amounts 
+    (comp 
+        combine-sum
+        (partial map amount-map)))
+
+(def idprint (fn [x] (println x) x))
+
 (defn build-totals [unspent]
     (->> unspent
-         (map amount-map)
-         combine-sum
+         address-amounts
          (merge-with calculate-transactions (sample-data))
          vals
          combine-sum))

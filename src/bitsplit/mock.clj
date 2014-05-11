@@ -27,9 +27,9 @@
 (defn random-percentages [total]
     (loop [created []
            remaining 100]
-        (if (= (count created) total)
+        (if (= (count created) ( - total 1))
             (conj created remaining)
-            (let [new-amt (nrand 0 ( * remaining (/ 2 3)))]
+            (let [new-amt (nrand 0 (-> remaining (* 2) (/ 3)))]
                 (recur 
                     (conj created new-amt)
                     (- remaining new-amt))))))
