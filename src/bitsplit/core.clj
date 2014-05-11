@@ -32,6 +32,7 @@
     (->> unspent
          address-amounts
          (merge-with calculate-transactions (sample-data))
+         idprint
          vals
          combine-sum))
 
