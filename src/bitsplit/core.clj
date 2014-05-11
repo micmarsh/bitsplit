@@ -19,10 +19,10 @@
 
         (->> totals
             (btc/createrawtransaction 
-                :txids-map (vec tx-hashes)
+                :txids-map tx-hashes
                 :addrs-amounts-map)
             (btc/signrawtransaction
-                :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent-data))
+                :txinfo (filter-unspent (conj tv "scriptPubKey") unspent-data)
                 :hexstring)
             get-hex
             (btc/sendrawtransaction :hexstring))))
