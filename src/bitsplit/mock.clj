@@ -14,6 +14,8 @@
         "mgoZxYMjuZcEvfJK31hnUFCW35hfvcPfaD"
         "mopBDLcHaBZ8Lu32VBFusuHjrbexxngqdt"
         "mpFjBM87wFXERLSkVZLt9awz4kjzBHrtJD"
+        ; my darkwallet?
+        "n4PNeR1iSDod7DDJgTWmVznVMfHGKhBqjJ"
         ; my wallet on TP's test faucet
         ; "n2aSLh3MefWgJWQ8jrLopmfPNUzQ41tCwi"
     })
