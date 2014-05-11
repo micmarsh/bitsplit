@@ -4,10 +4,11 @@
 (defn addr-seq [] (map #(% "address") (list-unspent)))
 
 (def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
-            "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
+            ; comment back in after next round
+            ; "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
             "n2rDFfh5uhY7RZg6opEWdKy24cU3ntXAmN"
-            ; my coinpunk wallet
-            ; "13GbCpCaT4At8XaEFeyQAwDewFnSUoBLui"
+            ; returning some testnet coins!
+            "msj42CCGruhRsFrGATiUuh25dtxYtnpbTx"
 })
 (def set2 #{
         "mzAWJh9tUqUKFrEHFJEAaxXpLrSFnJMEys"
@@ -16,8 +17,6 @@
         "mpFjBM87wFXERLSkVZLt9awz4kjzBHrtJD"
         ; my darkwallet
         "n4PNeR1iSDod7DDJgTWmVznVMfHGKhBqjJ"
-        ; my wallet on TP's test faucet
-        ; "n2aSLh3MefWgJWQ8jrLopmfPNUzQ41tCwi"
     })
 
 (defn nrand [start end]

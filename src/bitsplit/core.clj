@@ -30,4 +30,8 @@
 (defn send-coins []
     (let [unspent (list-unspent)
           totals (build-totals (sample-data) unspent)]
-          (send-transaction! totals unspent)))
+          (send-transaction! totals unspent)
+; down here: once u mode calculate a 'lil bit, will be able to use "applied percentages"
+; map to add database entries of what happened this round, OR add them + transaction id
+; to somewhere that listens to confirm transactions
+          ))
