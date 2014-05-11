@@ -11,24 +11,26 @@
 
 (def idprint (fn [x] (println x) x))
 
+(defn send-transaction [totals unspent-data]
+    (let [get-hex #(% "hex")
+          tv ["txid" "vout"]
+          tx-hashes (filter-unspent tv unspent)]
+        (btc/settxfee :amount 0.001M)
+
+        (->> totals
+            (btc/createrawtransaction 
+                :txids-map (vec tx-hashes)
+                :addrs-amounts-map)
+            (btc/signrawtransaction
+                :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent-data))
+                :hexstring)
+            get-hex
+            (btc/sendrawtransaction :hexstring))))
+
 (defn send-coins []
     (let [unspent (list-unspent)
-
-          send-totals (build-totals (sample-data) unspent)
-
-         ;  tv ["txid" "vout"]
-         ;  tx-hashes (filter-unspent tv unspent)
-         ;  first-hex (btc/createrawtransaction 
-         ;                :txids-map (vec tx-hashes)
-         ;                :addrs-amounts-map send-totals)
-
-         ;  signed (btc/signrawtransaction
-         ;                :hexstring first-hex
-         ;                :txinfo (vec (filter-unspent (conj tv "scriptPubKey") unspent)))
-         ;  feeset (btc/settxfee :amount 0.001M)
-         ;  done (btc/sendrawtransaction :hexstring (signed "hex"))]
-         ; done))
-        ] send-totals))
+          totals (build-totals (sample-data) unspent)]
+          (sendrawtransaction totals unspent)))
 
 (defn foo
   "I don't do a whole lot."
