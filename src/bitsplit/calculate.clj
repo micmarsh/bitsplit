@@ -1,5 +1,4 @@
-(ns bitsplit.calculate
-    (:use [bitsplit.mock :only (sample-data)]))
+(ns bitsplit.calculate)
 
 (def combine-sum (partial apply merge-with +))
 
@@ -18,9 +17,9 @@
 
 (def divide-payments (partial merge-with apply-percentages))
 
-(defn build-totals [unspent]
+(defn build-totals [percentages unspent]
     (->> unspent
          address-amounts
-         (divide-payments (sample-data))
+         (divide-payments percentages)
          vals
          combine-sum))

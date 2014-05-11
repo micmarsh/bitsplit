@@ -1,6 +1,7 @@
 (ns bitsplit.core
     (:use [bitsplit.bitcoind :only (list-unspent)]
-          [bitsplit.calculate :only (build-totals)])
+          [bitsplit.calculate :only (build-totals)]
+          [bitsplit.mock :only (sample-data)])
     (:require [clj-btc.core :as btc]))
     
 (defn filter-unspent [keys unspent]
@@ -13,7 +14,7 @@
 (defn send-coins []
     (let [unspent (list-unspent)
 
-          send-totals (build-totals unspent)
+          send-totals (build-totals (sample-data) unspent)
 
          ;  tv ["txid" "vout"]
          ;  tx-hashes (filter-unspent tv unspent)
