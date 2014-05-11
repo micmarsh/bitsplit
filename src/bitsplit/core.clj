@@ -11,7 +11,7 @@
 
 (def idprint (fn [x] (println x) x))
 
-(defn send-transaction [totals unspent-data]
+(defn send-transaction [totals unspent]
     (let [get-hex #(% "hex")
           tv ["txid" "vout"]
           tx-hashes (filter-unspent tv unspent)]
@@ -22,7 +22,7 @@
                 :txids-map tx-hashes
                 :addrs-amounts-map)
             (btc/signrawtransaction
-                :txinfo (filter-unspent (conj tv "scriptPubKey") unspent-data)
+                :txinfo (filter-unspent (conj tv "scriptPubKey") unspent)
                 :hexstring)
             get-hex
             (btc/sendrawtransaction :hexstring))))
