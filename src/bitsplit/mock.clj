@@ -6,6 +6,8 @@
 (def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
             "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
             "n2rDFfh5uhY7RZg6opEWdKy24cU3ntXAmN"
+            ; my coinpunk wallet
+            "13GbCpCaT4At8XaEFeyQAwDewFnSUoBLui"
 })
 (def set2 #{
         "mzAWJh9tUqUKFrEHFJEAaxXpLrSFnJMEys"
@@ -28,7 +30,9 @@
     (loop [created []
            remaining 100]
         (if (= (count created) ( - total 1))
-            (map #(java.math.BigDecimal. %) (conj created remaining))
+            (->> (conj created remaining)
+                (map #(java.math.BigDecimal. %))
+                shuffle)
             (let [new-amt (nrand 0 (-> remaining (* 2) (/ 3)))]
                 (recur 
                     (conj created new-amt)
@@ -42,7 +46,7 @@
 (def pairs->map #(reduce combine-pair { } %))
 
 (defn sample-divisions [addresses]
-    (let [pairs (map (fn [addr per] [addr (/ per 100)]) 
+    (let [pairs (map (fn [addr per] [addr (/ per 100M)]) 
                     addresses 
                     (-> addresses count random-percentages))]
         (pairs->map pairs)))    
