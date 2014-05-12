@@ -5,33 +5,20 @@
 
 (declare splits users)
 
+(defdb db (postgres {:db "resources/db/split.db"
+           :user "postgres"
+           :password ""
+           }))
+(defentity users
+    (database db)
+    (entity-fields :name :email :password)
+    (has-many splits))
+(defentity splits
+    (database db)
+    (entity-fields :address :percentages)
+    (belongs-to users))
 
-(defrecord Database [host port users splits]
-    component/Lifecycle
-
-   (start [this]
-        (println "starting the database")
-        (defdb db (postgres {:db "resources/db/split.db"
-                   :user "postgres"
-                   :password ""
-                   }))
-        (defentity users
-            (database db)
-            (entity-fields :name :email :password)
-            (has-many splits))
-        (defentity splits
-            (database db)
-            (entity-fields :address :percentages)
-            (belongs-to users))
-        (merge this {
-                :users users
-                :splits splits
-            }))
-   (stop [this]
-        (println "stopping database")))
-
-(defn new-database [host port]
-    (map->Database {:host host :port port}))
+(defrecord Tables [db users splits])
 
 (declare somehow-hash)
 
@@ -50,3 +37,5 @@
     (update splits
         (set-fields {:percentages percentages})
         (where {:address [= address]})))
+
+(def real-db (->Tables db users splits))
