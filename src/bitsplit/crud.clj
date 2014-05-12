@@ -15,6 +15,6 @@
 
 (defn modify-split! [{:keys [from to percent] :as split} user db] ;same deal w/ DB + user as above
     (let [current (get-split db from user) ; yup autheddb
-          changed (recalculate current split)] ;pure function!
+          changed (recalculate current split)] ; pure function!
           (save-split! db changed user) ; moar autheddb
           changed))

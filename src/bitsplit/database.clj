@@ -1,0 +1,38 @@
+(ns bitsplit.database
+    (:use korma.core
+          korma.db))
+
+(declare splits users)
+
+(defdb db (postgres {:db "resources/db/split.db"
+                   :user "postgres"
+                   :password ""
+                   }))
+
+(defentity users
+    (database db)
+    (entity-fields :name :email :password)
+    (has-many splits))
+
+(defentity splits
+    (database db)
+    (entity-fields :address :percentages)
+    (belongs-to users))
+
+(declare somehow-hash)
+
+(defn new-user! [user]
+    (let [password (:password user)
+          hashed (update-in user [:password] somehow-hash)]
+        (insert users
+            (values user))))
+
+(defn new-address! [address]
+    (insert splits
+        (values {:address address
+                 :percentages { }})))
+
+(defn update-address! [address percentages]
+    (update splits
+        (set-fields {:percentages percentages})
+        (where {:address [= address]})))
