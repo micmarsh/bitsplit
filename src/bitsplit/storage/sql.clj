@@ -1,4 +1,4 @@
-(ns bitsplit.storage.database
+(ns bitsplit.storage.sql
     (:use bitsplit.storage.protocol
           korma.core
           korma.db))
