@@ -21,7 +21,7 @@
 
 (declare somehow-hash)
 
-(defrecord SplitDatabase [db users splits]
+(defrecord SplitSQL [db users splits]
     IStorage
     (new-user! [this user]
       (let [password (:password user)
