@@ -5,7 +5,6 @@
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.bitcoin/bitsplit/"))
 (.mkdir (java.io.File. DIR))
-(def USERS_LOCATION (str DIR "users"))
 (def SPLITS_LOCATION (str DIR "splits"))
 
 (defn try-file 
@@ -19,10 +18,25 @@
             ; but oh well
             default))))
 
-(def users (try-file USERS_LOCATION))
 (def splits (try-file SPLITS_LOCATION))
 
-(defrecord SplitFile [users splits] 
+(defrecord SplitFile [splits persist?] 
     IStorage
-    (new-user! [this user]
-        (let [with-new (assoc users )])))
+    (all [this]
+        (if persist?
+            (try-file SPLITS_LOCATION splits)
+            splits))
+    (split! [this from to percentage]
+        (let [percentages (get splits from { })
+              new-percents (assoc percentages to percentage)
+              new-file (assoc splits from new-percents)]
+            (when persist? 
+                (spit SPLITS_LOCATION new-file))
+            (assoc this :splits new-file)))
+    (unsplit! [this from to]
+        (let [percentages (get splits from { })
+              new-percents (dissoc percentages to)
+              new-file (assoc splits from new-percents)]
+            (when persist? 
+                (spit SPLITS_LOCATION new-file))
+            (assoc this :splits new-file))))
