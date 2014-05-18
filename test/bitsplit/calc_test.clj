@@ -33,8 +33,22 @@
 (def gen-decimal (->> gen/s-pos-int
                     (gen/fmap (comp str float #(/ % 100)))
                     (gen/fmap #(java.math.BigDecimal. %))))
+(def gen-neg-dec (gen/fmap #(- %) gen-decimal))
 (def gen-address (gen/fmap #(str "address" %) (gen/elements (-> 10 range vec))))
 (def gen-mods (gen/tuple gen-address gen-address gen-decimal))
+
+(def val-sum #(->> % (map last) (reduce + 0M)))
+
+(defspec apply-difference-works
+    100
+    (prop/for-all
+        [percentages (gen/map gen-address gen-decimal)
+         diff (gen/one-of [gen-decimal gen-neg-dec])]
+        (let [before percentages
+              after (calc/apply-diff diff before)]
+            (= (+ (val-sum before) diff)
+               (val-sum after)))))
+
 
 (defn one-or-zero? [number]
     (or 
@@ -47,8 +61,7 @@
         [modifications (gen/vector (gen/tuple gen-address gen-decimal))]
         (->> modifications
             (reduce #(apply calc/save-percentage %1 %2) { })
-            (map last)
-            (reduce + 0M)
+            val-sum
             one-or-zero?)))
 
 ; (defspec percentages-always-preserved
