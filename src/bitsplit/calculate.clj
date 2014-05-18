@@ -52,9 +52,7 @@
         (dissoc adjusted address)))
 
 (defn- return [data from splits]
-    (if (empty? splits)
-        (dissoc data from)
-        (assoc data from splits)))
+    (assoc data from splits))
 
 (defn save-split [data from to per]
     {:pre [(<= per 1M)]}

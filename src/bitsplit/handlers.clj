@@ -27,21 +27,22 @@
         (assoc this :data new-splits)))
 
 (def storage 
-    (map->BalancedFile
-        {:data { }
+    (-> {:data { }
          :location SPLITS_LOCATION
-         :persist? false}))
+         :persist? false}
+        map->BalancedFile
+        atom))
 
 (defn save! [{params :params}]
     (let [{:keys [from to]} params
           percent (params "percentage")]
         (->> (java.math.BigDecimal. percent)
-            (split! storage from to)
+            (swap! storage split! from to)
             :data
             str)))
 
 (defn delete! [{{:keys [from to]} :params}]
-    (-> (unsplit! storage from to)
+    (-> (swap! storage unsplit! from to)
         :data 
         str))
 
