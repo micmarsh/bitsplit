@@ -21,14 +21,12 @@
 (defspec apply-difference-works
     100
     (prop/for-all
-        [percentages (gen/map gen-address gen-decimal)
+        [percentages (gen/non-empty (gen/map gen-address gen-decimal))
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
               after (calc/apply-diff diff before)]
-            (if (empty? before)
-                true
-                (= (+ (val-sum before) diff)
-                    (val-sum after))))))
+            (= (+ (val-sum before) diff)
+                (val-sum after)))))
 
 (fact "can handle weird edge case from generative testing"
     (calc/apply-diff 0.01M 
