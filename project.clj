@@ -3,9 +3,13 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/test.check "0.5.8"]
+  :dependencies [[org.clojure/core.async "0.1.267.0-0d7780-alpha"]
+                 [org.clojure/clojurescript "0.0-2173"]
+                 [org.clojure/test.check "0.5.8"]
+                 [org.clojure/data.json "0.2.4"]
                  [org.clojure/clojure "1.5.1"]
                  [compojure "1.1.8"]
+                 [reagent "0.4.2"]
                  [midje "1.6.3"]
                  [ring "1.2.2"]
 
@@ -14,5 +18,13 @@
                  [http-kit "2.1.11"]]
 
   :plugins [[lein-ring "0.7.1"]
-            [lein-midje "3.0.0"]]
-  :ring {:handler bitsplit.core/app})
+            [lein-midje "3.0.0"]
+            [lein-cljsbuild "1.0.2"]]
+
+  :ring {:handler bitsplit.core/app}
+  :cljsbuild
+      {:builds [{:source-paths ["src/client"]
+                   :compiler
+                     {:preamble ["reagent/react.js"]
+                      :output-to "resources/client/main.js"
+                      :pretty-print true}}]})
