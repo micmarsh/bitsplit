@@ -7,8 +7,6 @@
         [clojure.test.check.properties :as prop] 
         [bitsplit.calculate :as calc]))
 
-
-
 (def gen-decimal (->> gen/s-pos-int
                     (gen/fmap (comp #(/ % 100) #(mod % 100)))
                     (gen/fmap (comp str float))
@@ -16,6 +14,7 @@
 (def gen-neg-dec (gen/fmap #(- %) gen-decimal))
 (def gen-address (gen/fmap #(str "address" %) (gen/elements (-> 10 range vec))))
 (def gen-mods (gen/tuple gen-address gen-address gen-decimal))
+(def gen-deletes (gen/tuple gen-address gen-address))
 
 (def val-sum #(->> % (map last) (reduce + 0M) (with-precision 10)))
 
@@ -50,3 +49,20 @@
             (reduce #(apply calc/save-percentage %1 %2) { })
             val-sum
             one-or-zero?)))
+
+(defn save-or-delete [data args]
+      (let [save? #(= (count %) 3)
+            method (if (save? args)
+                      calc/save-split
+                      calc/delete-split)]
+            (apply method data args)))
+
+(defspec percentages-always-preserved
+         1000 
+        (prop/for-all
+            [modifications (gen/vector (gen/one-of [gen-mods gen-deletes]))]
+            (let [changed
+                    (reduce save-or-delete { } modifications)]
+                (->> changed
+                     (map (comp #(big= % 1M) val-sum last))
+                     (reduce #(and %1 %2) true)))))
