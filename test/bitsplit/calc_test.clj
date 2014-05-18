@@ -36,14 +36,29 @@
 (def gen-address (gen/fmap #(str "address" %) (gen/elements (-> 10 range vec))))
 (def gen-mods (gen/tuple gen-address gen-address gen-decimal))
 
-(defspec percentages-always-preserved
-         100 
-        (prop/for-all
-            [modifications (gen/vector gen-mods)]
-            (let [changed
-                    (reduce #(apply calc/save-split %1 %2) 
-                            { } modifications)]
-                (->> changed
-                     (map last)
-                     (map calc/one?)
-                     (reduce #(and %1 %2) true)))))
+(defn one-or-zero? [number]
+    (or 
+        (= 0M number)
+        (= 1M number)))
+
+(defspec save-percentage-adjusts-things
+    100
+    (prop/for-all
+        [modifications (gen/vector (gen/tuple gen-address gen-decimal))]
+        (->> modifications
+            (reduce #(apply calc/save-percentage %1 %2) { })
+            (map last)
+            (reduce + 0M)
+            one-or-zero?)))
+
+; (defspec percentages-always-preserved
+;          100 
+;         (prop/for-all
+;             [modifications (gen/vector gen-mods)]
+;             (let [changed
+;                     (reduce #(apply calc/save-split %1 %2) 
+;                             { } modifications)]
+;                 (->> changed
+;                      (map last)
+;                      (map calc/one?)
+;                      (reduce #(and %1 %2) true)))))
