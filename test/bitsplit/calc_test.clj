@@ -1,6 +1,11 @@
 (ns bitsplit.calc-test
-    (:use midje.sweet)
-    (:require [bitsplit.calculate :as calc]))
+    (:use clojure.test.check.clojure-test
+          midje.sweet)
+    (:require
+        [clojure.test.check :as tc]
+        [clojure.test.check.generators :as gen]
+        [clojure.test.check.properties :as prop] 
+        [bitsplit.calculate :as calc]))
 
 (fact "base case returns empty"
     (calc/apply-diff 0.2M { }) => { })
@@ -24,3 +29,21 @@
             "hello" 0.71M "yo" 1.51M
             "heyyo" 0.81M
             })
+
+(def gen-decimal (->> gen/s-pos-int
+                    (gen/fmap (comp str float #(/ % 100)))
+                    (gen/fmap #(java.math.BigDecimal. %))))
+(def gen-address (gen/fmap #(str "address" %) (gen/elements (-> 10 range vec))))
+(def gen-mods (gen/tuple gen-address gen-address gen-decimal))
+
+(defspec percentages-always-preserved
+         100 
+        (prop/for-all
+            [modifications (gen/vector gen-mods)]
+            (let [changed
+                    (reduce #(apply calc/save-split %1 %2) 
+                            { } modifications)]
+                (->> changed
+                     (map last)
+                     (map calc/one?)
+                     (reduce #(and %1 %2) true)))))
