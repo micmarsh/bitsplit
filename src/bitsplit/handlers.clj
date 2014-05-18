@@ -32,6 +32,16 @@
          :location SPLITS_LOCATION
          :persist? false}))
 
-(def save! (partial split! storage))
-(def delete! (partial unsplit! storage))
+(defn save! [{params :params}]
+    (let [{:keys [from to]} params
+          percent (params "percentage")]
+        (->> (java.math.BigDecimal. percent)
+            (split! storage from to)
+            :data
+            str)))
+
+(defn delete! [{{:keys [from to]} :params}]
+    (-> (unsplit! storage from to)
+        :data 
+        str))
 

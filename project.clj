@@ -7,6 +7,7 @@
                  [org.clojure/clojure "1.5.1"]
                  [compojure "1.1.8"]
                  [midje "1.6.3"]
+                 [ring "1.2.2"]
 
                  ;[clj-btc "0.1.1"]
                  [org.clojure/data.json "0.2.3"]
