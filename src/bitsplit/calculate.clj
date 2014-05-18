@@ -34,8 +34,6 @@
                         [addr (+ to-apply number)])
                     percentages)))))
 
-(def one? #(->> % (map last) (reduce + 0M) (= 1M)))
-
 (defn save-percentage [data address percentage]
     {:pre [(<= percentage 1M)]}
     (if (empty? data)
