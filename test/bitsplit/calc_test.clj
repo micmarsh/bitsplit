@@ -7,6 +7,8 @@
         [clojure.test.check.properties :as prop] 
         [bitsplit.calculate :as calc]))
 
+
+
 (def gen-decimal (->> gen/s-pos-int
                     (gen/fmap (comp str float #(/ % 100)))
                     (gen/fmap #(java.math.BigDecimal. %))))
@@ -14,7 +16,7 @@
 (def gen-address (gen/fmap #(str "address" %) (gen/elements (-> 10 range vec))))
 (def gen-mods (gen/tuple gen-address gen-address gen-decimal))
 
-(def val-sum #(->> % (map last) (reduce + 0M)))
+(def val-sum #(->> % (map last) (reduce + 0M) (with-precision 10)))
 
 (defspec apply-difference-works
     100
@@ -27,6 +29,12 @@
                 true
                 (= (+ (val-sum before) diff)
                     (val-sum after))))))
+
+(fact "can handle weird edge case from generative testing"
+    (calc/apply-diff 0.01M 
+        {"address0" 0.01M "address1" 0.01M})
+        => 
+        {"address0" 0.015M "address1" 0.015M})
 
 (defn one-or-zero? [number]
     (or 

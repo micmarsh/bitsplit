@@ -28,7 +28,7 @@
     (if (empty? percentages)
         percentages
         (let [divisor (-> percentages count (java.math.BigDecimal.))
-              to-apply (/ diff divisor)]
+             to-apply (with-precision 10 (/ diff divisor))]
             (into { }
                 (map (fn [[addr number]]
                         [addr (+ to-apply number)])
