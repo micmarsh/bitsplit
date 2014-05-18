@@ -31,5 +31,5 @@
               to-apply (/ diff divisor)]
             (into { }
                 (map (fn [[addr number]]
-                        [diff (+ to-apply number)])
+                        [addr (+ to-apply number)])
                     percentages)))))
