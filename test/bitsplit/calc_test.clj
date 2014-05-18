@@ -18,6 +18,8 @@
 
 (def val-sum #(->> % (map last) (reduce + 0M) (with-precision 10)))
 
+(def big= (comp (partial = 0) compare))
+
 (defspec apply-difference-works
     100
     (prop/for-all
@@ -25,19 +27,13 @@
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
               after (calc/apply-diff diff before)]
-            (= (+ (val-sum before) diff)
+            (big= (+ (val-sum before) diff)
                 (val-sum after)))))
-
-(fact "can handle weird edge case from generative testing"
-    (calc/apply-diff 0.01M 
-        {"address0" 0.01M "address1" 0.01M})
-        => 
-        {"address0" 0.015M "address1" 0.015M})
 
 (defn one-or-zero? [number]
     (or 
-        (= 0M number)
-        (= 1M number)))
+        (big= 0M number)
+        (big= 1M number)))
 
 (defspec save-percentage-adjusts-things
     100
@@ -48,14 +44,6 @@
             val-sum
             one-or-zero?)))
 
-(def base 
-    (->> [["address0" 0.01M] ["address1" 0.01M]]
-        (reduce #(apply calc/save-percentage %1 %2) { })))
-
-(fact "can handle minimal case"
-    base => {"address0" 0.99M "address1" 0.01M})
-
-
 ; (defspec percentages-always-preserved
 ;          100 
 ;         (prop/for-all
@@ -65,5 +53,5 @@
 ;                             { } modifications)]
 ;                 (->> changed
 ;                      (map last)
-;                      (map calc/one?)
+;                      (map one-or-zero?)
 ;                      (reduce #(and %1 %2) true)))))
