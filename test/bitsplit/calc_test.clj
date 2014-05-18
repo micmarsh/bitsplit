@@ -23,9 +23,10 @@
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
               after (calc/apply-diff diff before)]
-            (= (+ (val-sum before) diff)
-               (val-sum after)))))
-
+            (if (empty? before)
+                true
+                (= (+ (val-sum before) diff)
+                    (val-sum after))))))
 
 (defn one-or-zero? [number]
     (or 
