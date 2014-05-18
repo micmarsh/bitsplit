@@ -18,7 +18,10 @@
 
 (def val-sum #(->> % (map last) (reduce + 0M) (with-precision 10)))
 
-(def big= (comp (partial = 0) compare))
+(defn big= [first second]
+    (let [diff (- first second)]
+        (< (Math/abs (float diff))
+            0.00000001)))
 
 (defspec apply-difference-works
     100
@@ -26,9 +29,12 @@
         [percentages (gen/not-empty (gen/map gen-address gen-decimal))
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
-              after (calc/apply-diff diff before)]
-            (big= (+ (val-sum before) diff)
-                (val-sum after)))))
+              after (calc/apply-diff diff before)
+              b (+ (val-sum before) diff)
+              a (val-sum after)]
+            (when (not (big= a b))
+                (println a b))
+            (big= a b))))
 
 (defn one-or-zero? [number]
     (or 
@@ -43,15 +49,3 @@
             (reduce #(apply calc/save-percentage %1 %2) { })
             val-sum
             one-or-zero?)))
-
-; (defspec percentages-always-preserved
-;          100 
-;         (prop/for-all
-;             [modifications (gen/vector gen-mods)]
-;             (let [changed
-;                     (reduce #(apply calc/save-split %1 %2) 
-;                             { } modifications)]
-;                 (->> changed
-;                      (map last)
-;                      (map one-or-zero?)
-;                      (reduce #(and %1 %2) true)))))
