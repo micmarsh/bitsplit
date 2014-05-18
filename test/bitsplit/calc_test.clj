@@ -50,6 +50,14 @@
             val-sum
             one-or-zero?)))
 
+(def base 
+    (->> [["address0" 0.01M] ["address1" 0.01M]]
+        (reduce #(apply calc/save-percentage %1 %2) { })))
+
+(fact "can handle minimal case"
+    base => {"address0" 0.99M "address1" 0.01M})
+
+
 ; (defspec percentages-always-preserved
 ;          100 
 ;         (prop/for-all
