@@ -36,7 +36,9 @@
     (unsplit! [this from to]
         (let [percentages (get splits from { })
               new-percents (dissoc percentages to)
-              new-file (assoc splits from new-percents)]
+              new-file (if (empty? new-percents)
+                           (dissoc splits from)
+                           (assoc splits from new-percents))]
             (when persist? 
                 (spit location new-file))
             (assoc this :splits new-file))))
