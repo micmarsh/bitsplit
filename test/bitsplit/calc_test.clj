@@ -21,7 +21,7 @@
 (defspec apply-difference-works
     100
     (prop/for-all
-        [percentages (gen/non-empty (gen/map gen-address gen-decimal))
+        [percentages (gen/not-empty (gen/map gen-address gen-decimal))
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
               after (calc/apply-diff diff before)]
