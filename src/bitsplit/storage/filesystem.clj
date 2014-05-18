@@ -20,23 +20,23 @@
 
 (def splits (try-file SPLITS_LOCATION))
 
-(defrecord SplitFile [splits persist?] 
+(defrecord SplitFile [splits location persist?] 
     IStorage
     (all [this]
         (if persist?
-            (try-file SPLITS_LOCATION splits)
+            (try-file location splits)
             splits))
     (split! [this from to percentage]
         (let [percentages (get splits from { })
               new-percents (assoc percentages to percentage)
               new-file (assoc splits from new-percents)]
             (when persist? 
-                (spit SPLITS_LOCATION new-file))
+                (spit location new-file))
             (assoc this :splits new-file)))
     (unsplit! [this from to]
         (let [percentages (get splits from { })
               new-percents (dissoc percentages to)
               new-file (assoc splits from new-percents)]
             (when persist? 
-                (spit SPLITS_LOCATION new-file))
+                (spit location new-file))
             (assoc this :splits new-file))))
