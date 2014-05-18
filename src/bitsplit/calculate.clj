@@ -23,3 +23,13 @@
          (divide-payments percentages)
          vals
          combine-sum))
+
+(defn apply-diff [diff percentages]
+    (if (empty? percentages)
+        percentages
+        (let [divisor (-> percentages count (java.math.BigDecimal.))
+              to-apply (/ diff divisor)]
+            (into { }
+                (map (fn [[addr number]]
+                        [diff (+ to-apply number)])
+                    percentages)))))
