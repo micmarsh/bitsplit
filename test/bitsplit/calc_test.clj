@@ -58,11 +58,11 @@
             (apply method data args)))
 
 (defspec percentages-always-preserved
-         1000 
-        (prop/for-all
-            [modifications (gen/vector (gen/one-of [gen-mods gen-deletes]))]
-            (let [changed
-                    (reduce save-or-delete { } modifications)]
-                (->> changed
-                     (map (comp #(big= % 1M) val-sum last))
-                     (reduce #(and %1 %2) true)))))
+    1000 
+    (prop/for-all
+        [modifications (gen/vector (gen/one-of [gen-mods gen-deletes]))]
+        (let [changed
+                (reduce save-or-delete { } modifications)]
+            (->> changed
+                 (map (comp one-or-zero? val-sum last))
+                 (reduce #(and %1 %2) true)))))
