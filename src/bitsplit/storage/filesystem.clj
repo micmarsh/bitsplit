@@ -18,8 +18,6 @@
             ; but oh well
             default))))
 
-(def splits (try-file SPLITS_LOCATION))
-
 (defrecord SplitFile [splits location persist?] 
     IStorage
     (all [this]
