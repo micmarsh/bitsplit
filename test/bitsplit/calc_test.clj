@@ -24,17 +24,14 @@
             0.00000001)))
 
 (defspec apply-difference-works
-    1000
+    100
     (prop/for-all
         [percentages (gen/not-empty (gen/map gen-address gen-decimal))
          diff (gen/one-of [gen-decimal gen-neg-dec])]
         (let [before percentages
-              after (calc/apply-diff diff before)
-              b (+ (val-sum before) diff)
-              a (val-sum after)]
-            (when (not (big= a b))
-                (println a b))
-            (big= a b))))
+              after (calc/apply-diff diff before)]
+            (big= (+ (val-sum before) diff)
+                  (val-sum after)))))
 
 (defn one-or-zero? [number]
     (or 
@@ -42,7 +39,7 @@
         (big= 1M number)))
 
 (defspec save-percentage-adjusts-things
-    1000
+    100
     (prop/for-all
         [modifications (gen/vector (gen/tuple gen-address gen-decimal))]
         (->> modifications
@@ -58,7 +55,7 @@
             (apply method data args)))
 
 (defspec percentages-always-preserved
-    1000 
+    100 
     (prop/for-all
         [modifications (gen/vector (gen/one-of [gen-mods gen-deletes]))]
         (let [changed

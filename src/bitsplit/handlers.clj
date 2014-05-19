@@ -2,7 +2,8 @@
     (:use
         bitsplit.storage.protocol
         bitsplit.storage.filesystem)
-    (:require [bitsplit.calculate :as calc]))
+    (:require [bitsplit.calculate :as calc]
+              [bitsplit.bitcoind :as rpc]))
 
 (defprotocol Finishable
     (finish [this data]))
@@ -26,8 +27,11 @@
             (spit location new-splits))
         (assoc this :data new-splits)))
 
+(defn mapmap [fn seq & others]
+    (into { } (apply map fn seq others)))
+
 (def storage 
-    (-> {:data { }
+    (-> {:data (mapmap (fn [addr] [addr { }]) (rpc/list-addresses))
          :location SPLITS_LOCATION
          :persist? false}
         map->BalancedFile
@@ -38,6 +42,7 @@
 (defn save! [{params :params}]
     (let [{:keys [from to]} params
           percent (params "percentage")]
+        (println @storage)
         (->> (java.math.BigDecimal. percent)
             (swap! storage split! from to)
             :data

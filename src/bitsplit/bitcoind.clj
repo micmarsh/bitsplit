@@ -6,5 +6,8 @@
         :minconf 1
         :maxconf 9999999))
 
-
-
+(defn list-addresses
+    ([] (list-addresses ""))
+    ([account]
+        (btc/getaddressesbyaccount
+            :account account)))
