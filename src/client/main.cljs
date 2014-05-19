@@ -18,17 +18,19 @@
             (print result)
             (reset! all-splits result))))
 
+(defn splits-view [splits]
+    (for [[to percentage] splits]
+        ^{:key to}
+        [:p 
+            [:span to] ": "
+            [:span percentage]]))
+
 (defn main-view []
     [:div#main
         (for [[from splits] @all-splits]
             ^{:key from}
             [:div 
                 [:h2 from]
-                (for [[to percentage] splits]
-                    ^{:key to}
-                    [:p 
-                        [:span to]
-                        ": "
-                        [:span percentage]])])])
+                (splits-view splits)])])
 
 (r/render-component [main-view] (.-body js/document))
