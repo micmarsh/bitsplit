@@ -33,6 +33,8 @@
         map->BalancedFile
         atom))
 
+(defn list-all [req] (-> @storage all str))
+
 (defn save! [{params :params}]
     (let [{:keys [from to]} params
           percent (params "percentage")]
