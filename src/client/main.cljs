@@ -6,9 +6,7 @@
               [fluyt.requests :as requests]))
 
 (def print #(.log js/console %))
-(defn flip [function]
-    (fn [arg0 arg1]
-        (function arg1 arg0)))
+(defn flip [function] #(function %2 %1))
 
 (def all-splits (r/atom { }))
     
@@ -26,25 +24,28 @@
             [:span to] ": "
             [:span percentage]]))
 
-(defn insert-new [new-channels]
+(defn insert-new [new-channels new?]
     (let [values (atom { })]
         [:div
             [:input {:placeholder "Split to new address"
                      :on-change #(swap! values 
                         assoc :address (-> % .-target .-value))}]
-            [:input {:on-change #(swap! values 
-                        assoc :percent (-> % .-target .-value))}]
+            (if (not new?)
+                [:input {:on-change #(swap! values 
+                        assoc :percent (-> % .-target .-value))}])
             [:button {:on-click #(.log js/console 
                         (c/clj->js @values))} "Add Address" ]]))
 
-(defn main-view []
+(defn main-view [all-splits]
     [:div#main
-        (for [[from splits] @all-splits]
+        (for [[from splits] @all-splits
+              subsplits [(splits-view splits)]
+              new? [(empty? subsplits)]]
             ^{:key from}
             [:div 
                 [:h2 from]
-                (splits-view splits)
-                (insert-new)])])
+                subsplits
+                (insert-new nil new?)])])
 
-(r/render-component [main-view] 
+(r/render-component [main-view all-splits] 
     (.getElementById js/document "mainDisplay"))
