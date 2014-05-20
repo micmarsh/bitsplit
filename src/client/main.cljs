@@ -1,6 +1,7 @@
 (ns bitsplit.main
     (:require [reagent.core :as r]
               [cljs.reader :refer [read-string]]
+              [cljs.core :as c]
               [cljs.core.async :refer [take! map<]]
               [fluyt.requests :as requests]))
 
@@ -25,12 +26,25 @@
             [:span to] ": "
             [:span percentage]]))
 
+(defn insert-new [new-channels]
+    (let [values (atom { })]
+        [:div
+            [:input {:placeholder "Split to new address"
+                     :on-change #(swap! values 
+                        assoc :address (-> % .-target .-value))}]
+            [:input {:on-change #(swap! values 
+                        assoc :percent (-> % .-target .-value))}]
+            [:button {:on-click #(.log js/console 
+                        (c/clj->js @values))} "Add Address" ]]))
+
 (defn main-view []
     [:div#main
         (for [[from splits] @all-splits]
             ^{:key from}
             [:div 
                 [:h2 from]
-                (splits-view splits)])])
+                (splits-view splits)
+                (insert-new)])])
 
-(r/render-component [main-view] (.-body js/document))
+(r/render-component [main-view] 
+    (.getElementById js/document "mainDisplay"))
