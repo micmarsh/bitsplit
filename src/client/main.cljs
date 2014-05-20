@@ -2,8 +2,9 @@
     (:require [reagent.core :as r]
               [cljs.reader :refer [read-string]]
               [cljs.core :as c]
-              [cljs.core.async :refer [take! map<]]
-              [fluyt.requests :as requests]))
+              [cljs.core.async :refer [take! put! map> map< <! chan]]
+              [fluyt.requests :as requests])
+    (:use-macros [cljs.core.async.macros :only [go]]))
 
 (def print #(.log js/console %))
 (defn flip [function] #(function %2 %1))
@@ -12,10 +13,26 @@
     
 (->> (requests/get "http://localhost:3000/splits")
     (map< (comp read-string :body))
-    ((flip take!) 
+    ((flip take!)
         (fn [result]
             (print result)
             (reset! all-splits result))))
+
+(defn add-address [from to percent]
+    (->> (requests/post 
+            (str "http://localhost:3000/splits/"
+                  from "/" to "?percentage=" percent))
+        (map< (comp read-string :body))
+        ((flip take!)
+            #(reset! all-splits %))))
+
+(def new-splits (chan))
+(go
+    (while true
+        (let [{from :from to :address percent :percent}
+                 (<! new-splits)]
+            ; (print from to percent)
+            (add-address from to (or percent 1)))))
 
 (defn splits-view [splits]
     (for [[to percentage] splits]
@@ -24,7 +41,7 @@
             [:span to] ": "
             [:span percentage]]))
 
-(defn insert-new [new-channels new?]
+(defn insert-new [new-splits new?]
     (let [values (atom { })]
         [:div
             [:input {:placeholder "Split to new address"
@@ -33,10 +50,9 @@
             (if (not new?)
                 [:input {:on-change #(swap! values 
                         assoc :percent (-> % .-target .-value))}])
-            [:button {:on-click #(.log js/console 
-                        (c/clj->js @values))} "Add Address" ]]))
+            [:button {:on-click #(put! new-splits @values)} "Add Address" ]]))
 
-(defn main-view [all-splits]
+(defn main-view [all-splits new-splits]
     [:div#main
         (for [[from splits] @all-splits
               subsplits [(splits-view splits)]
@@ -45,7 +61,9 @@
             [:div 
                 [:h2 from]
                 subsplits
-                (insert-new nil new?)])])
+                (insert-new 
+                 (map> #(assoc % :from from) new-splits)
+                 new?)])])
 
-(r/render-component [main-view all-splits] 
+(r/render-component [main-view all-splits new-splits] 
     (.getElementById js/document "mainDisplay"))
