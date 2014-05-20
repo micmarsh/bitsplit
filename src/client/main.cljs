@@ -10,21 +10,22 @@
 (defn flip [function] #(function %2 %1))
 
 (def all-splits (r/atom { }))
-    
-(->> (requests/get "http://localhost:3000/splits")
-    (map< (comp read-string :body))
-    ((flip take!)
-        (fn [result]
-            (print result)
-            (reset! all-splits result))))
 
-(defn add-address [from to percent]
-    (->> (requests/post 
-            (str "http://localhost:3000/splits/"
-                  from "/" to "?percentage=" percent))
+(defn receive-splits [response]
+    (->> response
         (map< (comp read-string :body))
         ((flip take!)
-            #(reset! all-splits %))))
+            (fn [result]
+                (print result)
+                (reset! all-splits result))))) 
+
+((comp receive-splits requests/get)
+    "http://localhost:3000/splits" )
+
+(defn add-address [from to percent]
+    ((comp receive-splits requests/post) 
+        (str "http://localhost:3000/splits/"
+              from "/" to "?percentage=" percent)))
 
 (def new-splits (chan))
 (go
