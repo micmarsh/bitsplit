@@ -20,7 +20,18 @@
 
   :plugins [[lein-ring "0.7.1"]
             [lein-midje "3.0.0"]
-            [lein-cljsbuild "1.0.2"]]
+            [lein-cljsbuild "1.0.2"]
+            [com.keminglabs/cljx "0.3.2"]]
+
+  :cljx {:builds [{:source-paths ["src/cljx"]
+                 :output-path "target/classes"
+                 :rules :clj}
+
+                {:source-paths ["src/cljx"]
+                 :output-path "target/classes"
+                 :rules :cljs}]}
+                 
+  :hooks [cljx.hooks]
 
   :ring {:handler bitsplit.core/app}
   :cljsbuild

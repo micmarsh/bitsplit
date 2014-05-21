@@ -51,7 +51,7 @@
             (if (not new?)
                 [:input {:on-change #(swap! values 
                         assoc :percent (-> % .-target .-value))}])
-            [:button {:on-click #(put! new-splits @values)} "Add Address" ]]))
+            [:button {:on-click #(put! new-splits @values)} "Add Address"]]))
 
 (defn main-view [all-splits new-splits]
     [:div#main
