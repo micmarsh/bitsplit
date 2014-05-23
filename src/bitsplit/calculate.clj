@@ -12,7 +12,7 @@
 (defn apply-percentages [divisions total-held]
     (into { } 
         (map (fn [[addr per]]
-                [addr (* per total-held)])
+            [addr (* per total-held)])
         divisions)))
 
 (def divide-payments (partial merge-with apply-percentages))
