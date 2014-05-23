@@ -1,6 +1,8 @@
 (ns bitsplit.calculate)
 
 (def combine-sum (partial apply merge-with +))
+(def ONE #+clj 1M #+cljs 1)
+(def ZERO #+clj 0M #+cljs 0)
 
 (defn amount-map [tx]
     {(tx "address") (tx "amount")})
@@ -27,7 +29,9 @@
 (defn apply-diff [diff percentages]
     (if (empty? percentages)
         percentages
-        (let [divisor (-> percentages count (java.math.BigDecimal.))
+        (let [divisor (-> percentages count 
+                (#+clj java.math.BigDecimal.
+                 #+cljs js/Number ))
              to-apply (with-precision 10 (/ diff divisor))]
             (into { }
                 (map (fn [[addr number]]
@@ -35,27 +39,27 @@
                     percentages)))))
 
 (defn save-percentage [data address percentage]
-    {:pre [(<= percentage 1M)]}
+    {:pre [(<= percentage ONE)]}
     (if (empty? data)
-        {address 1M}
-        (let [previous (or (data address) 0M)
+        {address ONE}
+        (let [previous (or (data address) ZERO)
               diff (- previous percentage)
               without (dissoc data address)
               new-data (assoc data address percentage)]
             (if (empty? without)
-              {address 1M}
+              {address ONE}
               (merge new-data
                   (apply-diff diff without))))))
 
 (defn delete-percentage [data address]
-    (let [adjusted (save-percentage data address 0M)]
+    (let [adjusted (save-percentage data address ZERO)]
         (dissoc adjusted address)))
 
 (defn- return [data from splits]
     (assoc data from splits))
 
 (defn save-split [data from to per]
-    {:pre [(<= per 1M)]}
+    {:pre [(<= per ONE)]}
     (let [splits (data from)
           new-splits (save-percentage splits to per)]
         (return data from new-splits)))

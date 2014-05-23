@@ -3,13 +3,16 @@
               [cljs.reader :refer [read-string]]
               [cljs.core :as c]
               [cljs.core.async :refer [take! put! map> map< <! chan]]
-              [fluyt.requests :as requests])
+              [fluyt.requests :as requests]
+              [bitsplit.calculate :as calc])
     (:use-macros [cljs.core.async.macros :only [go]]))
 
 (def print #(.log js/console %))
 (defn flip [function] #(function %2 %1))
 
 (def all-splits (r/atom { }))
+
+(print calc/save-split)
 
 (defn receive-splits [response]
     (->> response
