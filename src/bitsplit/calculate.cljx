@@ -1,6 +1,7 @@
 (ns bitsplit.calculate)
 
 (def combine-sum (partial apply merge-with +))
+
 (def ONE #+clj 1M #+cljs 1)
 (def ZERO #+clj 0M #+cljs 0)
 
@@ -26,13 +27,17 @@
          vals
          combine-sum))
 
+(def precision 
+    #+clj (partial with-precision 10)
+    #+cljs identity)
+
 (defn apply-diff [diff percentages]
     (if (empty? percentages)
         percentages
         (let [divisor (-> percentages count 
                 (#+clj java.math.BigDecimal.
                  #+cljs js/Number ))
-             to-apply (with-precision 10 (/ diff divisor))]
+             to-apply (precision (/ diff divisor))]
             (into { }
                 (map (fn [[addr number]]
                         [addr (+ to-apply number)])
