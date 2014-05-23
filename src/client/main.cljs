@@ -42,13 +42,13 @@
             [:span to] ": "
             [:span percentage]]))
 
-(defn insert-new [new-splits new?]
+(defn insert-new [new-splits needs-percent]
     (let [values (atom { })]
         [:div
             [:input {:placeholder "Split to new address"
                      :on-change #(swap! values 
                         assoc :address (-> % .-target .-value))}]
-            (if (not new?)
+            (if needs-percent
                 [:input {:on-change #(swap! values 
                         assoc :percent (-> % .-target .-value))}])
             [:button {:on-click #(put! new-splits @values)} "Add Address"]]))
@@ -56,15 +56,14 @@
 (defn main-view [all-splits new-splits]
     [:div#main
         (for [[from splits] @all-splits
-              subsplits [(splits-view splits)]
-              new? [(empty? subsplits)]]
+              subsplits [(splits-view splits)]]
             ^{:key from}
             [:div 
                 [:h2 from]
                 subsplits
                 (insert-new 
                  (map> #(assoc % :from from) new-splits)
-                 new?)])])
+                 (-> subsplits empty? not))])])
 
 (r/render-component [main-view all-splits new-splits] 
     (.getElementById js/document "mainDisplay"))
