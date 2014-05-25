@@ -11,6 +11,7 @@
                  [fluyt "0.1.0-SNAPSHOT"]
                  [compojure "1.1.8"]
                  [reagent "0.4.2"]
+                 [digest "1.4.4"]
                  [midje "1.6.3"]
                  [ring "1.2.2"]
 

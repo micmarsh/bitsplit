@@ -1,42 +1,11 @@
-(ns bitsplit.main
+(ns bitsplit.ui
     (:require [reagent.core :as r]
-              [cljs.reader :refer [read-string]]
-              [cljs.core :as c]
-              [cljs.core.async :refer [take! put! map> map< <! chan]]
-              [fluyt.requests :as requests]
+              [cljs.core.async :refer [put! map>]]
               [bitsplit.calculate :as calc])
-    (:use-macros [cljs.core.async.macros :only [go]]))
+
+    (:use [bitsplit.state :only [all-splits new-splits]]))
 
 (def print #(.log js/console %))
-(defn flip [function] #(function %2 %1))
-
-(def all-splits (r/atom { }))
-
-(print calc/save-split)
-
-(defn receive-splits [response]
-    (->> response
-        (map< (comp read-string :body))
-        ((flip take!)
-            (fn [result]
-                (print result)
-                (reset! all-splits result))))) 
-
-((comp receive-splits requests/get)
-    "http://localhost:3000/splits" )
-
-(defn add-address [from to percent]
-    ((comp receive-splits requests/post) 
-        (str "http://localhost:3000/splits/"
-              from "/" to "?percentage=" percent)))
-
-(def new-splits (chan))
-(go
-    (while true
-        (let [{from :from to :address percent :percent}
-                 (<! new-splits)]
-            ; (print from to percent)
-            (add-address from to (or percent 1)))))
 
 (defn splits-view [splits]
     (for [[to percentage] splits]
