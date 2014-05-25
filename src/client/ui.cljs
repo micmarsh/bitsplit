@@ -24,7 +24,7 @@
 (defn update-values [key val-atom]
     (fn [element]
         (swap! val-atom
-          assoc key (-> % .-target .-value))))
+          assoc key (-> element .-target .-value))))
 
 
 (defn insert-new [new-splits needs-percent]

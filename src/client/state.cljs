@@ -17,7 +17,6 @@
         (map< (comp read-string :body))
         ((flip take!)
             (fn [result]
-                (print result)
                 (reset! all-splits result))))) 
 
 ((comp receive-splits requests/get)
@@ -33,5 +32,4 @@
     (while true
         (let [{from :from to :address percent :percent}
                  (<! new-splits)]
-            ; (print from to percent)
             (add-address from to (or percent 1)))))
