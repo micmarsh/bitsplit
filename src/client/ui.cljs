@@ -17,24 +17,29 @@
 
 (defn add-address [val-atom new-splits]
     (fn []
+        (print val-atom)
+        (print (:address @val-atom))
+        (print (:percent @val-atom))
         (put! new-splits @val-atom)
-        ; TODO still need to actually clear dom elements
-        ))
+        (reset! val-atom { })))
 
 (defn update-values [key val-atom]
     (fn [element]
+        (print element)
         (swap! val-atom
           assoc key (-> element .-target .-value))))
 
-
 (defn insert-new [new-splits needs-percent]
-    (let [values (atom { })]
-        [:div
-            [:input {:placeholder "Split to new address"
-                     :on-change (update-values :address values)}]
-            (if needs-percent
-                [:input {:on-change (update-values :percent values)}])
-            [:button {:on-click (add-address values new-splits)} "Add Address"]]))
+    (let [values (r/atom { })]
+        (fn [new-splits needs-percent]
+          [:div
+              [:input {:placeholder "Split to new address"
+                        :value (:address @values)
+                       :on-change (update-values :address values)}]
+              (if needs-percent
+                  [:input {:value (:percent @values)
+                           :on-change (update-values :percent values)}])
+              [:button {:on-click (add-address values new-splits)} "Add Address"]])))
 
 (defn main-view [all-splits new-splits]
     [:div#main
@@ -44,9 +49,9 @@
             [:div 
                 [:h2 from]
                 subsplits
-                (insert-new 
+                [insert-new 
                  (map> #(assoc % :from from) new-splits)
-                 (-> subsplits empty? not))])])
+                 (-> subsplits empty? not)]])])
 
 (r/render-component [main-view all-splits new-splits] 
     (.getElementById js/document "mainDisplay"))
