@@ -14,16 +14,27 @@
             [:span to] ": "
             [:span percentage]]))
 
+
+(defn add-address [val-atom new-splits]
+    (fn []
+        (put! new-splits @val-atom)
+        ; TODO still need to actually clear dom elements
+        ))
+
+(defn update-values [key val-atom]
+    (fn [element]
+        (swap! val-atom
+          assoc key (-> % .-target .-value))))
+
+
 (defn insert-new [new-splits needs-percent]
     (let [values (atom { })]
         [:div
             [:input {:placeholder "Split to new address"
-                     :on-change #(swap! values 
-                        assoc :address (-> % .-target .-value))}]
+                     :on-change (update-values :address values)}]
             (if needs-percent
-                [:input {:on-change #(swap! values 
-                        assoc :percent (-> % .-target .-value))}])
-            [:button {:on-click #(put! new-splits @values)} "Add Address"]]))
+                [:input {:on-change (update-values :percent values)}])
+            [:button {:on-click (add-address values new-splits)} "Add Address"]]))
 
 (defn main-view [all-splits new-splits]
     [:div#main
