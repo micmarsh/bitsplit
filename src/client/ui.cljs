@@ -44,6 +44,11 @@
                 address percent 
                 new-splits)} "Add Address"]]))
 
+; The issue: the address and percent that get set w/ update-value don't seem
+; to correspeond w/ the address and percent in add-address. Maybe should be wrapped in a function?
+; address percent are nil in add-address when they clearly shouldn't be, they should be mutable
+; refs, right?
+
 (defn main-view [all-splits new-splits]
     [:div#main
         (for [[from splits] @all-splits
