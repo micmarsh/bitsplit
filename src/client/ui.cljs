@@ -15,31 +15,34 @@
             [:span percentage]]))
 
 
-(defn add-address [val-atom new-splits]
+(defn add-address [address percent new-splits]
     (fn []
-        (print val-atom)
-        (print (:address @val-atom))
-        (print (:percent @val-atom))
-        (put! new-splits @val-atom)
-        (reset! val-atom { })))
+      (print address)
+       (let [values {:address @address :percent @percent}]
+          (put! new-splits values)
+          (reset! address nil)
+          (reset! percent nil))))
 
-(defn update-values [key val-atom]
+(defn update-value [val-atom]
     (fn [element]
-        (print element)
-        (swap! val-atom
-          assoc key (-> element .-target .-value))))
+        (reset! val-atom
+           (-> element .-target .-value))
+        (print val-atom)
+        (print @val-atom)))
 
 (defn insert-new [new-splits needs-percent]
-    (let [values (r/atom { })]
-        (fn [new-splits needs-percent]
-          [:div
-              [:input {:placeholder "Split to new address"
-                        :value (:address @values)
-                       :on-change (update-values :address values)}]
-              (if needs-percent
-                  [:input {:value (:percent @values)
-                           :on-change (update-values :percent values)}])
-              [:button {:on-click (add-address values new-splits)} "Add Address"]])))
+    (let [percent (r/atom nil)
+          address (r/atom nil)]
+        [:div
+            [:input {:placeholder "Split to new address"
+                      :value @address
+                     :on-change (update-value address)}]
+            (if needs-percent
+                [:input {:value @percent
+                         :on-change (update-value percent)}])
+            [:button {:on-click (add-address 
+                address percent 
+                new-splits)} "Add Address"]]))
 
 (defn main-view [all-splits new-splits]
     [:div#main
