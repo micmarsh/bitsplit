@@ -19,13 +19,15 @@
             (fn [result]
                 (reset! all-splits result))))) 
 
-((comp receive-splits requests/get)
-    "http://localhost:3000/splits" )
+((comp receive-splits requests/get) 
+    "http://localhost:3000/splits")
+
+(def receive-post (comp receive-splits requests/post))
 
 (defn add-address [from to percent]
-    ((comp receive-splits requests/post) 
+    (receive-post
         (str "http://localhost:3000/splits/"
-              from "/" to "?percentage=" percent)))
+            from "/" to "?percentage=" percent)))
 
 (def new-splits (chan))
 (go

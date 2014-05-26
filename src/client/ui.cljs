@@ -63,5 +63,6 @@
                  (map> #(assoc % :from from) new-splits)
                  (-> subsplits empty? not)]])])
 
-(r/render-component [main-view all-splits new-splits] 
+(r/render-component
+    [main-view all-splits new-splits] 
     (.getElementById js/document "mainDisplay"))

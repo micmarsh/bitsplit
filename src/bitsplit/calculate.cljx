@@ -27,10 +27,6 @@
          vals
          combine-sum))
 
-(def precision 
-    #+clj (partial #(with-precision %1 %2) 10)
-    #+cljs identity)
-
 (defn apply-diff [diff percentages]
     (if (empty? percentages)
         percentages
