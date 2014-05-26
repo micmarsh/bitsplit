@@ -19,8 +19,8 @@
        (print (str @address " " @percent))
        (let [values {:address @address :percent @percent}]
           (put! new-splits values)
-          ; (reset! address nil)
-          ; (reset! percent nil)
+          (reset! address "")
+          (reset! percent "")
           )))
 
 (defn update-value [val-atom]
@@ -34,10 +34,12 @@
       (fn [new-splits needs-percent]
           [:div
               [:input {:placeholder "Split to new address"
+                       :type "text"
                        :value @address
                        :on-change (update-value address)}]
               (if needs-percent
-                  [:input {:value @percent
+                  [:input {:type "text"
+                           :value @percent
                            :on-change (update-value percent)}])
               [:button 
                   {:on-click (add-address address percent new-splits)} 
