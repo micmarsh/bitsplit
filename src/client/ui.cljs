@@ -16,39 +16,40 @@
 
 (defn add-address [address percent new-splits]
     (fn [ ]
-       (print (str @address " " @percent))
        (let [values {:address @address :percent @percent}]
           (put! new-splits values)
           (reset! address "")
-          (reset! percent "")
-          )))
+          (reset! percent ""))))
 
 (defn update-value [val-atom]
     (fn [element]
         (reset! val-atom
            (-> element .-target .-value))))
 
+(defn on-key [keycode callback]
+    (fn [element]
+        (let [which (.-which element)]
+            (when (= keycode which)
+                (callback)))))
+
 (defn insert-new [new-splits needs-percent]
-    (let [percent (r/atom nil)
-          address (r/atom nil)]
+    (let [percent (r/atom "")
+          address (r/atom "")
+          save (add-address address percent new-splits)
+          on-enter (on-key 13 save)]
       (fn [new-splits needs-percent]
           [:div
               [:input {:placeholder "Split to new address"
                        :type "text"
                        :value @address
-                       :on-change (update-value address)}]
+                       :on-change (update-value address)
+                       :on-key-up on-enter}]
               (if needs-percent
                   [:input {:type "text"
                            :value @percent
-                           :on-change (update-value percent)}])
-              [:button 
-                  {:on-click (add-address address percent new-splits)} 
-              "Add Address"]])))
-
-; The issue: the address and percent that get set w/ update-value don't seem
-; to correspeond w/ the address and percent in add-address. Maybe should be wrapped in a function?
-; address percent are nil in add-address when they clearly shouldn't be, they should be mutable
-; refs, right?
+                           :on-change (update-value percent)
+                           :on-key-up on-enter}])
+              [:button {:on-click save} "Add Address"]])))
 
 (defn main-view [all-splits new-splits]
     [:div#main
