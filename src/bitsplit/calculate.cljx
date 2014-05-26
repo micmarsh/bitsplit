@@ -37,7 +37,8 @@
         (let [divisor (-> percentages count 
                 (#+clj java.math.BigDecimal.
                  #+cljs js/Number ))
-             to-apply (precision (/ diff divisor))]
+             to-apply #+clj (with-precision 10 (/ diff divisor))
+                      #+cljs (/ diff divisor)]
             (into { }
                 (map (fn [[addr number]]
                         [addr (+ to-apply number)])

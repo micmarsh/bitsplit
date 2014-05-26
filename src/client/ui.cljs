@@ -14,35 +14,34 @@
             [:span to] ": "
             [:span percentage]]))
 
-
 (defn add-address [address percent new-splits]
-    (fn []
-      (print address)
+    (fn [ ]
+       (print (str @address " " @percent))
        (let [values {:address @address :percent @percent}]
           (put! new-splits values)
-          (reset! address nil)
-          (reset! percent nil))))
+          ; (reset! address nil)
+          ; (reset! percent nil)
+          )))
 
 (defn update-value [val-atom]
     (fn [element]
         (reset! val-atom
-           (-> element .-target .-value))
-        (print val-atom)
-        (print @val-atom)))
+           (-> element .-target .-value))))
 
 (defn insert-new [new-splits needs-percent]
     (let [percent (r/atom nil)
           address (r/atom nil)]
-        [:div
-            [:input {:placeholder "Split to new address"
-                      :value @address
-                     :on-change (update-value address)}]
-            (if needs-percent
-                [:input {:value @percent
-                         :on-change (update-value percent)}])
-            [:button {:on-click (add-address 
-                address percent 
-                new-splits)} "Add Address"]]))
+      (fn [new-splits needs-percent]
+          [:div
+              [:input {:placeholder "Split to new address"
+                       :value @address
+                       :on-change (update-value address)}]
+              (if needs-percent
+                  [:input {:value @percent
+                           :on-change (update-value percent)}])
+              [:button 
+                  {:on-click (add-address address percent new-splits)} 
+              "Add Address"]])))
 
 ; The issue: the address and percent that get set w/ update-value don't seem
 ; to correspeond w/ the address and percent in add-address. Maybe should be wrapped in a function?
