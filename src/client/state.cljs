@@ -32,6 +32,10 @@
 (def new-splits (chan))
 (go
     (while true
-        (let [{from :from to :address percent :percent}
-                 (<! new-splits)]
-            (add-address from to (or percent 1)))))
+        (let [split (<! new-splits)
+              {:keys [from address percent]} split
+              valid (.address js/validate address)]
+            (if valid
+                (add-address from address 
+                    (or (js/Number percent) 1))
+                (print (str "oh shit an error " address))))))
