@@ -1,6 +1,8 @@
 (function (window) {
 
     function check(address) {
+        if (address == null) return false;
+        
         var decoded = base58_decode(address);     
         if (decoded.length != 25) return false;
 
