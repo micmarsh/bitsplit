@@ -87,6 +87,8 @@
         return a.join('');
     }
 
-    window.addressCheck = check;
+    var validate = { };
+    validate.address = check;
+    window.validate = validate;
 
 })(window)
