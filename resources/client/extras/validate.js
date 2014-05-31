@@ -2,8 +2,8 @@
 
     function check(address) {
         if (address == null) return false;
-        
-        var decoded = base58_decode(address);     
+
+        var decoded = base58_decode(address.trim());     
         if (decoded.length != 25) return false;
 
         var cksum = decoded.substr(decoded.length - 4); 
