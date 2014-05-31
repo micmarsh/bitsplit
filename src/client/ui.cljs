@@ -6,7 +6,7 @@
     (:use-macros [marshmacros.coffee :only [cofmap]]
                  [cljs.core.async.macros :only [go]]))
 
-(def print #(.log js/console %))
+(set! *print-fn* #(.log js/console %))
 
 (defn splits-view [splits]
     (for [[to percentage] splits]
@@ -17,11 +17,12 @@
 
 (defn add-address [{:keys [errors address percent new-splits]}]
     (fn [ ]
-      (let [percentage (or (js/Number @percent) 0)]
+      (let [percentage (js/Number @percent)
+            n (println no-percent percentage)]
         (cond 
           (->> @address (.address js/validate) not)
               (put! errors :address)
-          (or (> percentage 1) (>= 0 percentage))
+          (or (> percentage 1) (<= percentage 0))
               (put! errors :percent)
           :else
             (do
@@ -61,7 +62,8 @@
           percent (r/atom "")
           address (r/atom "")
           errors (chan)
-          save (add-address (cofmap address percent new-splits errors))
+          save (add-address 
+                  (cofmap address percent new-splits errors))
           on-enter (on-key 13 save)]
       (set-errors (cofmap errors error-message))
       (fn [new-splits needs-percent]
@@ -75,7 +77,8 @@
                   [:input {:type "text"
                            :value @percent
                            :on-change (update-value percent)
-                           :on-key-up on-enter}])
+                           :on-key-up on-enter}]
+                  (do (reset! percent 1) nil))
               [:button {:on-click save} "Add Address"]
               [:br]
               [:p {:style {:color "red"}} @error-message]])))

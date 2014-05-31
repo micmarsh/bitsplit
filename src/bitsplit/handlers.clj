@@ -33,7 +33,7 @@
 (def storage 
     (-> {:data (mapmap (fn [addr] [addr { }]) (rpc/list-addresses))
          :location SPLITS_LOCATION
-         :persist? false}
+         :persist? true}
         map->BalancedFile
         atom))
 
