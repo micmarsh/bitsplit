@@ -21,4 +21,7 @@
             wrap-params))
 
 (defn -main []
-    (run-jetty app {:port 3026}))
+    (try
+        (run-jetty app {:port 3026})
+    (catch java.net.ConnectException e 
+        (println "You need a running bitcoind instance!"))))
