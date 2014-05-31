@@ -5,8 +5,7 @@
 (def ONE #+clj 1M #+cljs 1)
 (def ZERO #+clj 0M #+cljs 0)
 
-(defn amount-map [tx]
-    {(tx "address") (tx "amount")})
+(defn amount-map [tx] {(tx "address") (tx "amount")})
 (def address-amounts 
     (comp 
         combine-sum
@@ -20,9 +19,13 @@
 
 (def divide-payments (partial merge-with apply-percentages))
 
+(defn select-map [submap supermap] 
+    (select-keys supermap (keys submap)))
+
 (defn build-totals [percentages unspent]
     (->> unspent
          address-amounts
+         (select-map percentages)
          (divide-payments percentages)
          vals
          combine-sum))

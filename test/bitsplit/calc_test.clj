@@ -63,3 +63,13 @@
             (->> changed
                  (map (comp one-or-zero? val-sum last))
                  (reduce #(and %1 %2) true)))))
+
+(def blank-percent {"foobar" { "other" 1M } })
+(def sample-txs [
+    {"address" "foobar" "amount" 2M}
+    {"address" "woooo" "amount" 1M}
+  ])
+
+(fact "build totals works"
+    (calc/build-totals blank-percent sample-txs)
+        => {"other" 2M})

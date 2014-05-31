@@ -34,8 +34,13 @@
 ; map to add database entries of what happened this round, OR add them + transaction id
 ; to somewhere that listens to confirm transactions
           
-(defn send-coins []
-    "use for testing"
-    (make-transfers! 
-        (sample-data)
-        (list-unspent)))
+(defn send-coins 
+    "use for testing" []
+    (let [data (sample-data)
+          unspent (list-unspent)]
+        (println data)
+        (println unspent)
+        ; (make-transfers! 
+        ;     data
+        ;     unspent)
+        ))

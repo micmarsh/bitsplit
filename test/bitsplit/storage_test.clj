@@ -29,6 +29,4 @@
         (p/split! "address3" "address1" 0.3)))
 
 (fact "can clean up and modify values as expected"
-    (p/all newer-storage) => {
-        "address3" {"address1" 0.3}
-        })
+    (p/all newer-storage) => {"address3" {"address1" 0.3}})
