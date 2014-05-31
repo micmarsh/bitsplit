@@ -35,7 +35,7 @@
     (try
         (thread-loop
             (Thread/sleep (* 5000 1))
-            (let [percentages (handlers/list-all nil)
+            (let [percentages (-> nil handlers/list-all read-string)
                   unspent (rpc/list-unspent)]
                 (println percentages)
                 (println unspent)
