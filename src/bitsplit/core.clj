@@ -31,10 +31,15 @@
                 ~@body
                 (recur))))))
 
+(defn thread-sleep [minutes]
+    (Thread/sleep (* minutes 1000 60)))
+
+(def INTERVAL 5)
+
 (defn -main []
     (try
         (thread-loop
-            (Thread/sleep (* 5000 1))
+            (thread-sleep INTERVAL)
             (let [percentages (-> nil handlers/list-all read-string)
                   unspent (rpc/list-unspent)]
                 (println percentages)
