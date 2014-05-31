@@ -1,12 +1,13 @@
 (ns bitsplit.core
   (:use compojure.core
-        [ring.middleware.params :only (wrap-params)])
+        [ring.middleware.params :only (wrap-params)]
+        [ring.adapter.jetty :only (run-jetty)])
   (:require [compojure.route :as route]
             [bitsplit.handlers :as handlers]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json])
+  (:gen-class))
 
 (defroutes app-routes
-
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
@@ -18,3 +19,6 @@
 ; really should use liberator
 (def app (-> app-routes
             wrap-params))
+
+(defn -main []
+    (run-jetty app {:port 3026}))

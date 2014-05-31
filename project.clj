@@ -25,6 +25,13 @@
             [lein-cljsbuild "1.0.2"]
             [com.keminglabs/cljx "0.3.2"]]
 
+  :main bitsplit.core
+
+   ;; uberjar
+  :uberjar-name "bitsplit.jar"
+  :aot :all
+  :omit-source true
+
   :source-paths ["src/" "target/generated-src/clj/"]
 
   :cljx {:builds [{:source-paths ["src/"]
