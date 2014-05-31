@@ -25,14 +25,14 @@
                 :txinfo (filter-unspent (conj tv "scriptPubKey") unspent)
                 :hexstring)
             get-hex
-            (btc/sendrawtransaction :hexstring))))
+            (btc/sendrawtransaction :hexstring)
+            idprint)))
 
 (defn make-transfers! [percentages unspent]
     (let [totals (build-totals percentages unspent)]
+          (println totals)
           (send-transaction! totals unspent)))
-; down here: once u mode calculate a 'lil bit, will be able to use "applied percentages"
-; map to add database entries of what happened this round, OR add them + transaction id
-; to somewhere that listens to confirm transactions
+
           
 (defn send-coins 
     "use for testing" []

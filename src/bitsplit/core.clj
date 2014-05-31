@@ -34,7 +34,7 @@
 (defn thread-sleep [minutes]
     (Thread/sleep (* minutes 1000 60)))
 
-(def INTERVAL 5)
+(def INTERVAL 1);(/ 1 30))
 
 (defn -main []
     (try

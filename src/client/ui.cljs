@@ -22,7 +22,7 @@
         (cond 
           (->> @address (.address js/validate) not)
               (put! errors :address)
-          (or (> percentage 1) (<= percentage 0))
+          (or (> percentage 1) (<= percentage 0) (js/isNaN percentage))
               (put! errors :percent)
           :else
             (do
