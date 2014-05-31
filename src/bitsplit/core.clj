@@ -42,8 +42,6 @@
             (thread-sleep INTERVAL)
             (let [percentages (-> nil handlers/list-all read-string)
                   unspent (rpc/list-unspent)]
-                (println percentages)
-                (println unspent)
                 (transfer/make-transfers! percentages unspent)))
         (run-jetty app {:port 3026})
     (catch java.net.ConnectException e 
