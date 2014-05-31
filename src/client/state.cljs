@@ -36,6 +36,5 @@
               {:keys [from address percent]} split
               valid (.address js/validate address)]
             (if valid
-                (add-address from address 
-                    (or (js/Number percent) 1))
+                (add-address from address percent)
                 (print (str "oh shit an error " address))))))

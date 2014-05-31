@@ -9,6 +9,7 @@
                  [org.clojure/data.json "0.2.4"]
                  [org.clojure/clojure "1.5.1"]
                  [fluyt "0.1.0-SNAPSHOT"]
+                 [marshmacros "0.2.1"]
                  [compojure "1.1.8"]
                  [reagent "0.4.2"]
                  [digest "1.4.4"]

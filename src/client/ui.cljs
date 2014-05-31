@@ -1,9 +1,10 @@
 (ns bitsplit.ui
     (:require [reagent.core :as r]
-              [cljs.core.async :refer [put! map>]]
+              [cljs.core.async :refer [put! map> chan <!]]
               [bitsplit.calculate :as calc])
-
-    (:use [bitsplit.state :only [all-splits new-splits]]))
+    (:use [bitsplit.state :only [all-splits new-splits]])
+    (:use-macros [marshmacros.coffee :only [cofmap]]
+                 [cljs.core.async.macros :only [go]]))
 
 (def print #(.log js/console %))
 
@@ -14,12 +15,20 @@
             [:span to] ": "
             [:span percentage]]))
 
-(defn add-address [address percent new-splits]
+(defn add-address [{:keys [errors address percent new-splits]}]
     (fn [ ]
-       (let [values {:address @address :percent @percent}]
-          (put! new-splits values)
-          (reset! address "")
-          (reset! percent ""))))
+      (let [percentage (or (js/Number @percent) 0)]
+        (cond 
+          (->> @address (.address js/validate) not)
+              (put! errors :address)
+          (or (> percentage 1) (> 0 percentage))
+              (put! errors :percent)
+          :else
+            (do
+              (put! new-splits 
+                  {:address @address :percent percentage})
+              (reset! address "")
+              (reset! percent ""))))))
 
 (defn update-value [val-atom]
     (fn [element]
@@ -32,11 +41,29 @@
             (when (= keycode which)
                 (callback)))))
 
+(defn set-errors [{:keys [errors error-message]}]
+    (go 
+        (while true
+            (let [error (<! errors)]
+              (do
+                (reset! error-message 
+                    (cond (= error :address)
+                            "Not a Bitcoin Address"
+                          (= error :percent)
+                            "Not a Percentage"
+                          :else ""))
+                (js/setTimeout
+                    #(reset! error-message "")
+                  2000))))))
+
 (defn insert-new [new-splits needs-percent]
-    (let [percent (r/atom "")
+    (let [error-message (r/atom "")
+          percent (r/atom "")
           address (r/atom "")
-          save (add-address address percent new-splits)
+          errors (chan)
+          save (add-address (cofmap address percent new-splits errors))
           on-enter (on-key 13 save)]
+      (set-errors (cofmap errors error-message))
       (fn [new-splits needs-percent]
           [:div
               [:input {:placeholder "Split to new address"
@@ -49,7 +76,9 @@
                            :value @percent
                            :on-change (update-value percent)
                            :on-key-up on-enter}])
-              [:button {:on-click save} "Add Address"]])))
+              [:button {:on-click save} "Add Address"]
+              [:br]
+              [:p @error-message]])))
 
 (defn main-view [all-splits new-splits]
     [:div#main
