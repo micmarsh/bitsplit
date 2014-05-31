@@ -8,6 +8,8 @@
 
 (def print #(.log js/console %))
 
+(def BASE (str "http://" (.-host js/location)))
+
 (defn flip [function] #(function %2 %1))
 
 (def all-splits (r/atom { }))
@@ -20,13 +22,13 @@
                 (reset! all-splits result))))) 
 
 ((comp receive-splits requests/get) 
-    "http://localhost:3000/splits")
+    (str BASE "/splits"))
 
 (def receive-post (comp receive-splits requests/post))
 
 (defn add-address [from to percent]
     (receive-post
-        (str "http://localhost:3000/splits/"
+        (str BASE "/splits/"
             from "/" to "?percentage=" percent)))
 
 (def new-splits (chan))
