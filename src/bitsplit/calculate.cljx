@@ -22,14 +22,6 @@
 (defn select-map [submap supermap] 
     (select-keys supermap (keys submap)))
 
-(defn build-totals [percentages unspent]
-    (->> unspent
-         address-amounts
-         (select-map percentages)
-         (divide-payments percentages)
-         vals
-         combine-sum))
-
 (defn apply-diff [diff percentages]
     (if (empty? percentages)
         percentages
@@ -42,6 +34,15 @@
                 (map (fn [[addr number]]
                         [addr (+ to-apply number)])
                     percentages)))))
+
+(defn build-totals [percentages unspent]
+    (->> unspent
+         address-amounts
+         (select-map percentages)
+         (divide-payments percentages)
+         vals
+         combine-sum
+         (apply-diff 0.001M)))
 
 (defn save-percentage [data address percentage]
     {:pre [(<= percentage ONE)]}

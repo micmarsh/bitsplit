@@ -15,7 +15,7 @@
     (let [get-hex #(% "hex")
           tv ["txid" "vout"]
           tx-hashes (filter-unspent tv unspent)]
-        (btc/settxfee :amount 0.001M)
+        ; (btc/settxfee :amount 0.0001M)
 
         (->> totals
             (btc/createrawtransaction 
