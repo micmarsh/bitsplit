@@ -4,7 +4,10 @@
         [ring.adapter.jetty :only (run-jetty)])
   (:require [compojure.route :as route]
             [bitsplit.handlers :as handlers]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+
+            [bitsplit.transfer :as transfer]
+            [bitsplit.bitcoind :as rpc])
   (:gen-class))
 
 (defroutes app-routes
@@ -16,12 +19,27 @@
             (str (System/getProperty "user.dir") 
                 "/resources/client")})
     (route/not-found "<h1>Page not found</h1>"))
+
 ; really should use liberator
 (def app (-> app-routes
             wrap-params))
 
+(defmacro thread-loop [& body]
+    `(.start (Thread. 
+        (fn [] 
+            (loop []
+                ~@body
+                (recur))))))
+
 (defn -main []
     (try
+        (thread-loop
+            (Thread/sleep (* 5000 1))
+            (let [percentages (handlers/list-all nil)
+                  unspent (rpc/list-unspent)]
+                (println percentages)
+                (println unspent)
+                (transfer/make-transfers! percentages unspent)))
         (run-jetty app {:port 3026})
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))

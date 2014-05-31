@@ -6,7 +6,7 @@
 (def ZERO #+clj 0M #+cljs 0)
 
 (defn amount-map [tx]
-    {(get tx "address") (get tx "amount")})
+    {(tx "address") (tx "amount")})
 (def address-amounts 
     (comp 
         combine-sum

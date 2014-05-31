@@ -15,7 +15,6 @@
                  [digest "1.4.4"]
                  [midje "1.6.3"]
                  [ring "1.2.2"]
-
                  ;[clj-btc "0.1.1"]
                  [org.clojure/data.json "0.2.3"]
                  [http-kit "2.1.11"]]
