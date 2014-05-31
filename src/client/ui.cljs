@@ -21,7 +21,7 @@
         (cond 
           (->> @address (.address js/validate) not)
               (put! errors :address)
-          (or (> percentage 1) (> 0 percentage))
+          (or (> percentage 1) (>= 0 percentage))
               (put! errors :percent)
           :else
             (do
@@ -78,7 +78,7 @@
                            :on-key-up on-enter}])
               [:button {:on-click save} "Add Address"]
               [:br]
-              [:p @error-message]])))
+              [:p {:style {:color "red"}} @error-message]])))
 
 (defn main-view [all-splits new-splits]
     [:div#main
