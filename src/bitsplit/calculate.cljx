@@ -41,8 +41,7 @@
          (select-map percentages)
          (divide-payments percentages)
          vals
-         combine-sum
-         (apply-diff 0.001M)))
+         combine-sum))
 
 (defn save-percentage [data address percentage]
     {:pre [(<= percentage ONE)]}
