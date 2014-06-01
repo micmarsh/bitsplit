@@ -31,7 +31,7 @@
     (into { } (apply map fn seq others)))
 
 (def storage 
-    (-> {:data (mapmap (fn [addr] [addr { }]) (rpc/list-addresses))
+    (-> {:data (mapmap (fn [addr] [addr { }]) ["trololololo", "hello"]);;(rpc/list-addresses))
          :location SPLITS_LOCATION
          :persist? true}
         map->BalancedFile
