@@ -24,6 +24,8 @@
             [lein-cljsbuild "1.0.2"]
             [com.keminglabs/cljx "0.3.2"]]
 
+  :resource-paths ["resources/"]
+
   :main bitsplit.core
 
    ;; uberjar
