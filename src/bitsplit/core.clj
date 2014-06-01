@@ -1,6 +1,7 @@
 (ns bitsplit.core
   (:use compojure.core
         [ring.middleware.params :only (wrap-params)]
+        [ring.middleware.resource :only (wrap-resource)]
         [ring.adapter.jetty :only (run-jetty)])
   (:require [compojure.route :as route]
             [bitsplit.handlers :as handlers]
@@ -14,15 +15,12 @@
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
-    (route/files "/" 
-        {:root 
-            (str (System/getProperty "user.dir") 
-                "/resources/client")})
     (route/not-found "<h1>Page not found</h1>"))
 
 ; really should use liberator
 (def app (-> app-routes
-            wrap-params))
+            wrap-params
+            (wrap-resource "client")))
 
 (defmacro thread-loop [& body]
     `(.start (Thread. 
