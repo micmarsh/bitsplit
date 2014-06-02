@@ -15,6 +15,7 @@
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
+    (route/files "/" {:root "client/"})
     (route/not-found "<h1>Page not found</h1>"))
 
 ; really should use liberator
