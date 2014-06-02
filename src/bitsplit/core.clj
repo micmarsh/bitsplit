@@ -19,8 +19,8 @@
 
 ; really should use liberator
 (def app (-> app-routes
-            wrap-params
-            (wrap-resource "client")))
+            (wrap-resource "client")
+            wrap-params))
 
 (defmacro thread-loop [& body]
     `(.start (Thread. 
