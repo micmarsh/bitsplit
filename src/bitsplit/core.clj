@@ -13,7 +13,7 @@
   (:gen-class))
 
 (defroutes app-routes
-    (GET "/" [] (redirect "/index.html"))
+    (GET "/" [] (clojure.java.io/resource "client/index.html"))
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
