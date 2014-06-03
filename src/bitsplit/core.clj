@@ -15,7 +15,7 @@
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
-    (route/files "/" {:root "client/"})
+    (route/resources "/" {:root "client/index.html"})
     (route/not-found "<h1>Page not found</h1>"))
 
 ; really should use liberator
@@ -35,13 +35,13 @@
 
 (def INTERVAL 0.1);(/ 1 30))
 
-(defn -main []
+(defn -main [& [port]]
     (try
         ; (thread-loop
         ;     (thread-sleep INTERVAL)
         ;     (let [percentages (-> nil handlers/list-all read-string)
         ;           unspent (rpc/list-unspent)]
         ;         (transfer/make-transfers! percentages unspent)))
-        (run-jetty app {:port 3026})
+        (run-jetty app {:port (if port (Integer. port) 3026)})
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))
