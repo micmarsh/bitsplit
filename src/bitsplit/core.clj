@@ -2,7 +2,8 @@
   (:use compojure.core
         [ring.middleware.params :only (wrap-params)]
         [ring.middleware.resource :only (wrap-resource)]
-        [ring.adapter.jetty :only (run-jetty)])
+        [ring.adapter.jetty :only (run-jetty)]
+         [ring.util.response :only (redirect)])
   (:require [compojure.route :as route]
             [bitsplit.handlers :as handlers]
             [clojure.data.json :as json]
@@ -12,10 +13,10 @@
   (:gen-class))
 
 (defroutes app-routes
+    (GET "/" [] (redirect "/index.html"))
     (GET "/splits" [] handlers/list-all)
     (POST "/splits/:from/:to" [] handlers/save!)
     (DELETE "/splits/:from/:to" [] handlers/delete!)
-    (route/resources "/" {:root "client/index.html"})
     (route/not-found "<h1>Page not found</h1>"))
 
 ; really should use liberator
