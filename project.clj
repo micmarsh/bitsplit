@@ -50,6 +50,6 @@
   :cljsbuild
       {:builds [{:source-paths ["src/client/" "target/generated-src/cljs/"]
                    :compiler
-                     {:preamble ["reagent/react.js"]
+                     {:preamble ["reagent/react.min.js"]
                       :output-to "resources/client/main.js"
                       :pretty-print true}}]})

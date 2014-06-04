@@ -10,4 +10,4 @@ Clone it, yo (doesn't actually work yet)
 
 Copyright © 2014 Michael Marsh
 
-Distributed under the Eclipse Public License either version 1.0
+Distributed under the Eclipse Public License either version <1 class="0"></1>
