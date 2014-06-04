@@ -1,14 +1,13 @@
-# bitsplit
+# Bitsplit
 
-A Clojure library designed to ... well, that part is up to you.
+Manage a shared Bitcoin address and distribute the profits as you choose. Starting as a desktop app, eventually to become a webservice.
 
 ## Usage
 
-FIXME
+Clone it, yo (doesn't actually work yet)
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Michael Marsh
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0
