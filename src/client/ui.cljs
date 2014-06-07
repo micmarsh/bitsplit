@@ -67,7 +67,9 @@
           on-enter (on-key 13 save)]
       (set-errors (cofmap errors error-message))
       (fn [new-splits needs-percent]
-          [:div.form-group
+          [(if (= @error-message "")
+              :div.form-group
+              :div.form-group.has-error)
               [:input.form-control
                       {:placeholder "Split to new address"
                        :type "text"
@@ -81,7 +83,8 @@
                            :on-change (update-value percent)
                            :on-key-up on-enter}]
                   (do (reset! percent 1) nil))
-              [:button.btn.btn-primary {:on-click #(do (save) false)} "Add Address"]
+              [:button.btn.btn-primary 
+                  {:on-click #(do (save) false)} "Add Address"]
               [:br]
               [:p {:style {:color "red"}} @error-message]])))
 
