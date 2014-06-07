@@ -29,7 +29,8 @@
               (put! new-splits 
                   {:address @address :percent percentage})
               (reset! address "")
-              (reset! percent ""))))))
+              (reset! percent "")))
+        nil)))
 
 (defn update-value [val-atom]
     (fn [element]
@@ -67,19 +68,21 @@
           on-enter (on-key 13 save)]
       (set-errors (cofmap errors error-message))
       (fn [new-splits needs-percent]
-          [:div
-              [:input {:placeholder "Split to new address"
+          [:div.form-group
+              [:input.form-control
+                      {:placeholder "Split to new address"
                        :type "text"
                        :value @address
                        :on-change (update-value address)
                        :on-key-up on-enter}]
               (if needs-percent
-                  [:input {:type "text"
+                  [:input.form-control
+                          {:type "text"
                            :value @percent
                            :on-change (update-value percent)
                            :on-key-up on-enter}]
                   (do (reset! percent 1) nil))
-              [:button {:on-click save} "Add Address"]
+              [:button.btn.btn-primary {:on-click save} "Add Address"]
               [:br]
               [:p {:style {:color "red"}} @error-message]])))
 
@@ -91,9 +94,11 @@
             [:div 
                 [:h2 from]
                 subsplits
-                [insert-new 
-                 (map> #(assoc % :from from) new-splits)
-                 (-> subsplits empty? not)]])])
+                [:form.form-inline
+                  {:role "form"}
+                  [insert-new 
+                   (map> #(assoc % :from from) new-splits)
+                   (-> subsplits empty? not)]]])])
 
 (r/render-component
     [main-view all-splits new-splits] 
