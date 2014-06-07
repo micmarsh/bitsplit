@@ -18,7 +18,7 @@
 (defn add-address [{:keys [errors address percent new-splits]}]
     (fn [ ]
       (let [percentage (js/Number @percent)
-            n (println no-percent percentage)]
+            n (println @address)]
         (cond 
           (->> @address (.address js/validate) not)
               (put! errors :address)
@@ -29,7 +29,8 @@
               (put! new-splits 
                   {:address @address :percent percentage})
               (reset! address "")
-              (reset! percent ""))))))
+              (reset! percent "")))
+        false)))
 
 (defn update-value [val-atom]
     (fn [element]
@@ -40,12 +41,14 @@
     (fn [element]
         (let [which (.-which element)]
             (when (= keycode which)
-                (callback)))))
+                (callback)))
+        false))
 
 (defn set-errors [{:keys [errors error-message]}]
     (go 
         (while true
             (let [error (<! errors)]
+            (println error) 
               (do
                 (reset! error-message 
                     (cond (= error :address)
@@ -75,16 +78,18 @@
                        :type "text"
                        :value @address
                        :on-change (update-value address)
-                       :on-key-up on-enter}]
+                       ;:on-key-up on-enter
+                       }]
               (if needs-percent
                   [:input.form-control
                           {:type "text"
                            :value @percent
                            :on-change (update-value percent)
-                           :on-key-up on-enter}]
+                           ;:on-key-up on-enter
+                           }]
                   (do (reset! percent 1) nil))
               [:button.btn.btn-primary 
-                  {:on-click #(do (save) false)} "Add Address"]
+                  {:on-click save} "Add Address"]
               [:br]
               [:p {:style {:color "red"}} @error-message]])))
 
