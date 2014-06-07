@@ -29,8 +29,7 @@
               (put! new-splits 
                   {:address @address :percent percentage})
               (reset! address "")
-              (reset! percent "")))
-        nil)))
+              (reset! percent ""))))))
 
 (defn update-value [val-atom]
     (fn [element]
@@ -82,7 +81,7 @@
                            :on-change (update-value percent)
                            :on-key-up on-enter}]
                   (do (reset! percent 1) nil))
-              [:button.btn.btn-primary {:on-click save} "Add Address"]
+              [:button.btn.btn-primary {:on-click #(do (save) false)} "Add Address"]
               [:br]
               [:p {:style {:color "red"}} @error-message]])))
 
