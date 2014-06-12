@@ -3,7 +3,7 @@
         bitsplit.storage.protocol
         bitsplit.storage.filesystem)
     (:require [bitsplit.calculate :as calc]
-              [bitsplit.bitcoind :as rpc]))
+              [bitsplit.clients.bitcoind :as rpc]))
 
 (defprotocol Finishable
     (finish [this data]))

@@ -1,4 +1,4 @@
-(ns bitsplit.bitcoind
+(ns bitsplit.clients.bitcoind
     (:require [clj-btc.core :as btc]))
 
 (def list-unspent 

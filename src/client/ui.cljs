@@ -98,7 +98,7 @@
         (for [[from splits] @all-splits
               subsplits [(splits-view splits)]]
             ^{:key from}
-            [:div 
+            [:div
                 [:h2 from]
                 subsplits
                 [:form.form-inline

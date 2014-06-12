@@ -1,7 +1,6 @@
 (ns bitsplit.storage.filesystem
     (:use bitsplit.storage.protocol))
 
-
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.bitcoin/bitsplit/"))
 (.mkdir (java.io.File. DIR))
