@@ -6,10 +6,7 @@
 (def ZERO #+clj 0M #+cljs 0)
 
 (defn amount-map [tx] {(tx "address") (tx "amount")})
-(def address-amounts 
-    (comp 
-        combine-sum
-        (partial map amount-map)))
+(def address-amounts #(->> % (map amount-map) combine-sum)) 
 
 (defn apply-percentages [divisions total-held]
     (into { } 
