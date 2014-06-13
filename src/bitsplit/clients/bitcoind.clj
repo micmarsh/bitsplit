@@ -1,5 +1,5 @@
 (ns bitsplit.clients.bitcoind
-    (:use bitcoind.clients.protocol)
+    (:use bitsplit.clients.protocol)
     (:require [clj-btc.core :as btc]
               [bitsplit.calculate :refer [address-amounts]]))
 
@@ -17,7 +17,7 @@
 (defrecord Bitcoind [account]
     BitsplitClient
     (unspent-amounts [this]
-        (let [unspent-tx (listunspent)
+        (let [unspent-tx (list-unspent)
               addresses (-> account list-addresses set)]
             (->> unspent-tx
                 (filter #(contains? addresses (% "address")))

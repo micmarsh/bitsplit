@@ -1,7 +1,7 @@
 (ns bitsplit.core
   (:use compojure.core
-        bitsplit.bitcoind
-        bitsplit.client.protocol
+        bitsplit.clients.bitcoind
+        bitsplit.clients.protocol
         [ring.middleware.params :only (wrap-params)]
         [ring.middleware.resource :only (wrap-resource)]
         [ring.adapter.jetty :only (run-jetty)]
@@ -21,6 +21,7 @@
     (route/not-found "<h1>Page not found</h1>"))
 
 (def client (->Bitcoind ""))
+
 ; really should use liberator
 (def app (-> app-routes
             (wrap-resource "client")
