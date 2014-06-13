@@ -1,15 +1,16 @@
 (ns bitsplit.core
   (:use compojure.core
+        bitsplit.bitcoind
+        bitsplit.client.protocol
         [ring.middleware.params :only (wrap-params)]
         [ring.middleware.resource :only (wrap-resource)]
         [ring.adapter.jetty :only (run-jetty)]
-         [ring.util.response :only (redirect)])
+        [ring.util.response :only (redirect)])
   (:require [compojure.route :as route]
             [bitsplit.handlers :as handlers]
             [clojure.data.json :as json]
 
-            [bitsplit.transfer :as transfer]
-            [bitsplit.bitcoind :as rpc])
+            [bitsplit.transfer :as transfer])
   (:gen-class))
 
 (defroutes app-routes
@@ -19,6 +20,7 @@
     (DELETE "/splits/:from/:to" [] handlers/delete!)
     (route/not-found "<h1>Page not found</h1>"))
 
+(def client (->Bitcoind ""))
 ; really should use liberator
 (def app (-> app-routes
             (wrap-resource "client")
@@ -37,11 +39,11 @@
 
 (defn -main [& [port]]
     (try
-        ; (thread-loop
-        ;     (thread-sleep INTERVAL)
-        ;     (let [percentages (-> nil handlers/list-all read-string)
-        ;           unspent (rpc/list-unspent)]
-        ;         (transfer/make-transfers! percentages unspent)))
+        (thread-loop
+            (thread-sleep INTERVAL)
+            (let [percentages (-> nil handlers/list-all read-string)
+                  unspent (unspent-amounts client)]
+                (transfer/make-transfers! client percentages unspent)))
         (run-jetty app {:port (if port (Integer. port) 3026)})
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))

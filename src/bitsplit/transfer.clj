@@ -1,8 +1,7 @@
 (ns bitsplit.transfer
-    (:use [bitsplit.bitcoind :only (list-unspent)]
+    (:use bitsplit.client.protocol
           [bitsplit.calculate :only (build-totals)]
-          [bitsplit.mock :only (sample-data)])
-    (:require [clj-btc.core :as btc]))
+          [bitsplit.mock :only (sample-data)]))
     
 (defn filter-unspent [keys unspent]
     (->> unspent
@@ -11,28 +10,13 @@
 
 (def idprint (fn [x] (println x) x))
 
-(defn send-transaction! [totals unspent]
-    (let [get-hex #(% "hex")
-          tv ["txid" "vout"]
-          tx-hashes (filter-unspent tv unspent)]
-        ; (btc/settxfee :amount 0.0001M)
+(defn send-transaction! [client totals]
+    (send-amounts client totals))
 
-        (->> totals
-            (btc/createrawtransaction 
-                :txids-map tx-hashes
-                :addrs-amounts-map)
-            (btc/signrawtransaction
-                :txinfo (filter-unspent (conj tv "scriptPubKey") unspent)
-                :hexstring)
-            get-hex
-            (btc/sendrawtransaction :hexstring)
-            idprint)))
-
-(defn make-transfers! [percentages unspent]
-    (let [totals (build-totals percentages unspent)]
-          (println totals)
-          (send-transaction! totals unspent)))
-
+(defn make-transfers! [client percentages unspent]
+    (->> unspent
+         (build-totals percentages)
+         (send-transaction! client)))
           
 (defn send-coins 
     "use for testing" []
