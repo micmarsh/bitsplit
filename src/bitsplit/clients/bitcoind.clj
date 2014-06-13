@@ -18,9 +18,10 @@
     BitsplitClient
     (unspent-amounts [this]
         (let [unspent-tx (list-unspent)
-              addresses (-> account list-addresses set)]
+              addresses (-> account list-addresses set)
+              account-address? #(contains? addresses (% "address"))]
             (->> unspent-tx
-                (filter #(contains? addresses (% "address")))
+                (filter account-address?)
                 address-amounts)))
     (send-amounts! [this amounts]
         (btc/sendmany
