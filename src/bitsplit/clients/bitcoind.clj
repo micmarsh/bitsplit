@@ -18,7 +18,7 @@
     BitsplitClient
     (unspent-amounts [this]
         (let [unspent-tx (listunspent)
-              addresses (account list-addresses set)]
+              addresses (-> account list-addresses set)]
             (->> unspent-tx
                 (filter #(contains? addresses (% "address")))
                 address-amounts)))

@@ -32,9 +32,8 @@
                         [addr (+ to-apply number)])
                     percentages)))))
 
-(defn build-totals [percentages unspent]
-    (->> unspent
-         address-amounts
+(defn build-totals [percentages amounts]
+    (->> amounts 
          (select-map percentages)
          (divide-payments percentages)
          vals
