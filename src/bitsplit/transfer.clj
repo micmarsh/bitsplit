@@ -1,7 +1,6 @@
 (ns bitsplit.transfer
     (:use bitsplit.clients.protocol
-          [bitsplit.calculate :only (build-totals)]
-          [bitsplit.mock :only (sample-data)]))
+          [bitsplit.calculate :only (build-totals)]))
   
 
 (defn make-transfers! [client percentages unspent]
