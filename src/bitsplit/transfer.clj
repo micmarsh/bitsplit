@@ -2,7 +2,6 @@
     (:use bitsplit.clients.protocol
           [bitsplit.calculate :only (build-totals)]))
   
-
 (defn make-transfers! [client percentages unspent]
     (->> unspent
          (build-totals percentages)
