@@ -13,12 +13,14 @@
         (label address)
         (label percentage)))
 
+(def compact (partial filter identity))
+
 (defn address-adder [percentage?]
-    (flow-panel :items [ 
+    (flow-panel :items (compact [ 
         (text "")
         (when percentage? (text ""))
-        (button "Add Address")
-    ]))
+        (button :text "Add Address")
+    ])))
 
 
 (defn entry->ui [[address percentages]]
