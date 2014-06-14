@@ -1,7 +1,7 @@
 (ns bitsplit.mock
     (:use [bitsplit.bitcoind :only (list-unspent)]))
 
-(defn addr-seq [] (map #(% "address") (list-unspent)))
+(defn addr-seq [] set1 );(map #(% "address") (list-unspent)))
 
 (def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
             "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"

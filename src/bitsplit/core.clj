@@ -40,11 +40,11 @@
 
 (defn -main [& [port]]
     (try
-        (thread-loop
-            (thread-sleep INTERVAL)
-            (let [percentages (-> nil handlers/list-all read-string)
-                  unspent (unspent-amounts client)]
-                (transfer/make-transfers! client percentages unspent)))
+        ; (thread-loop
+        ;     (thread-sleep INTERVAL)
+        ;     (let [percentages (-> nil handlers/list-all read-string)
+        ;           unspent (unspent-amounts client)]
+        ;         (transfer/make-transfers! client percentages unspent)))
         (run-jetty app {:port (if port (Integer. port) 3026)})
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))
