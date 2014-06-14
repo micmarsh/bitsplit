@@ -24,9 +24,9 @@
 (defn entry->ui [[address percentages]]
     (vertical-panel :items [
         (label address)
-        (map-list percentage->ui percentages))
+        (map-list percentage->ui percentages)
         (address-adder (-> percentages empty? not))
-    ])
+    ]))
 
 (defn splits->ui [splits]
     (->> splits
