@@ -14,21 +14,22 @@
         (label percentage)))
 
 (def compact (partial filter identity))
-
+(defn register-button [actions address percentage button]
+    (listen button :action 
+        (fn [e]
+            (async/put! actions
+                {:type :add-address
+                 :address (value address)
+                 :percentage (value percentage)})))
+    button)
 (defn address-adder [actions percentage?]
     (let [address (text "")
           percentage (text (if percentage? "" "1"))]
         (flow-panel :items (compact [ 
             address
             (when percentage? percentage)
-            (-> (button :text "Add Address" )
-                (listen :action 
-                    (fn [e]
-                        (async/put! actions
-                            {:type :add-address
-                             :address (value address)
-                             :percentage (value percentage)}))))]))))
-
+            (->> (button :text "Add Address" )
+                (register-button actions address percentage))]))))
 
 (defn entry->ui [actions [address percentages]]
     (vertical-panel :items [
