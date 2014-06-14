@@ -5,7 +5,7 @@
 
 (def map-list 
     (comp 
-        (partial grid-panel :columns 1 :items) 
+        (partial vertical-panel :items) 
         map))
 
 (defn percentage->ui [[address percentage]]
@@ -19,8 +19,9 @@
         (map-list percentage->ui percentages)))
 
 (defn splits->ui [splits]
-    ((comp scrollable map-list) 
-        entry->ui splits))
+    (->> splits
+        (map-list entry->ui)
+        scrollable))
 
 (defn start-ui! [initial]
     (let [data (splits->ui initial)
