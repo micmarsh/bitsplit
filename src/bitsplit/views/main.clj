@@ -15,33 +15,37 @@
 
 (def compact (partial filter identity))
 
-(defn address-adder [percentage?]
+(defn address-adder [actions percentage?]
     (flow-panel :items (compact [ 
         (text "")
         (when percentage? (text ""))
-        (button :text "Add Address")
-    ])))
+        (-> (button :text "Add Address" )
+            (listen :action 
+                (fn [e]
+                    ())))])))
 
 
-(defn entry->ui [[address percentages]]
+(defn entry->ui [actions [address percentages]]
     (vertical-panel :items [
         (label address)
         (map-list percentage->ui percentages)
-        (address-adder (-> percentages empty? not))
-    ]))
+        (address-adder actions 
+            (-> percentages empty? not))]))
 
-(defn splits->ui [splits]
+(defn splits->ui [actions splits]
     (->> splits
-        (map-list entry->ui)
+        (map-list (partial entry->ui actions))
         scrollable))
 
-(defn start-ui! [initial]
-    (let [data (splits->ui initial)
+(defn start-ui! [initial changes]
+    (let [actions (async/chan)
+          data (splits->ui actions initial)
           main (frame
                 :size [400 :by 500]
                 :title "Bitsplit"
                 :content data)]
-          (-> main show!)))
+          (show! main)
+          actions))
 
-(def start! #(start-ui! (sample-data)))
+(def start! #(start-ui! (sample-data) (async/chan)))
 
