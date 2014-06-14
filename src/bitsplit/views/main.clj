@@ -13,10 +13,20 @@
         (label address)
         (label percentage)))
 
+(defn address-adder [percentage?]
+    (flow-panel :items [ 
+        (text "")
+        (when percentage? (text ""))
+        (button "Add Address")
+    ]))
+
+
 (defn entry->ui [[address percentages]]
-    (top-bottom-split
+    (vertical-panel :items [
         (label address)
-        (map-list percentage->ui percentages)))
+        (map-list percentage->ui percentages))
+        (address-adder (-> percentages empty? not))
+    ])
 
 (defn splits->ui [splits]
     (->> splits
