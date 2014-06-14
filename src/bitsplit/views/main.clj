@@ -16,13 +16,18 @@
 (def compact (partial filter identity))
 
 (defn address-adder [actions percentage?]
-    (flow-panel :items (compact [ 
-        (text "")
-        (when percentage? (text ""))
-        (-> (button :text "Add Address" )
-            (listen :action 
-                (fn [e]
-                    ())))])))
+    (let [address (text "")
+          percentage (text (if percentage? "" "1"))]
+        (flow-panel :items (compact [ 
+            address
+            (when percentage? percentage)
+            (-> (button :text "Add Address" )
+                (listen :action 
+                    (fn [e]
+                        (async/put! actions
+                            {:type :add-address
+                             :address (value address)
+                             :percentage (value percentage)}))))]))))
 
 
 (defn entry->ui [actions [address percentages]]
