@@ -65,7 +65,7 @@
           main (frame
                 :size [400 :by 500]
                 :title "Bitsplit"
-                :content data)]
+                :content ui)]
           (show! main)
           (async/go (while true
                 (let [change (<! changes)]
