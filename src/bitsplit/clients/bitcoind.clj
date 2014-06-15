@@ -29,8 +29,7 @@
                 address-amounts)))
     (unspent-channel [this]
         (let [return (chan)]
-            (thread-loop
-                (thread-sleep INTERVAL)
+            (thread-interval INTERVAL
                 (let [unspent (unspent-amounts this)]
                     (when (-> unspent empty? not)
                         (put! return unspent))))
