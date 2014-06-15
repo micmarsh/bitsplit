@@ -14,7 +14,7 @@
 (defn thread-sleep [minutes]
     (Thread/sleep (* minutes 1000 60)))
 
-(def INTERVAL 0.1);(/ 1 30))
+(def INTERVAL 0.1)
 
 (def list-unspent 
     #(btc/listunspent 
@@ -43,7 +43,7 @@
                 (let [unspent (unspent-amounts this)]
                     (when (-> unspent empty? not)
                         (put! return unspent))))
-            return)
+            return))
     (send-amounts! [this amounts]
         (btc/sendmany
             :fromaccount account

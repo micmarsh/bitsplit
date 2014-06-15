@@ -1,5 +1,6 @@
 (ns bitsplit.transfer
     (:use bitsplit.clients.protocol
+          bitsplit.storage.protocol
           [clojure.core.async :only (go <!)]
           [bitsplit.calculate :only (build-totals)]))
   
@@ -8,7 +9,6 @@
          (build-totals percentages)
          (send-amounts! client)))
           
-
 (defn handle-unspents! [client storage unspents]
     (go (while true
         (let [unspent (<! unspents)
