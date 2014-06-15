@@ -47,17 +47,24 @@
         (map-list (partial entry->ui actions))
         scrollable))
 
-(defn add-address [panel address percentage]
-    (let [list-items (second (config panel :items))
-          new-items (conj list-items (percentage->ui [address percentage]))]
+(defn second-item [items thing]
+    (let [head (first items)
+          tail (-> items rest rest)]
+        (->> tail
+            (cons thing)
+            (cons head))))
+
+(defn new-addresses [panel percentages]
+    (let [panel-items (config panel :items)
+          new-items (second-item panel-items (map-list percentage->ui percentages))]
         (config! panel :items new-items)))
 
 (defn apply-change [root change]
     (condp = (:type change)
         :add-address
-            (let [{:keys [from to percentage]} change]
+            (let [ {:keys [percentages from]} change]
                 (-> (select root [(keyword (str \# from))])
-                    (add-address to percentage)))))
+                    (new-addresses percentages)))))
 
 (defn start-ui! [initial changes]
     (let [actions (async/chan)
