@@ -1,6 +1,7 @@
 (ns bitsplit.views.list
     (:use seesaw.core
-          [bitsplit.views.utils :only [map-list assoc-second]]))
+          [clojure.core.async :only (put!)]
+          [bitsplit.views.utils :only (map-list assoc-second)]))
 
 (defn percentage->ui [[address percentage]]
     (left-right-split
@@ -11,7 +12,7 @@
 (defn register-button [actions address percentage parent button]
     (listen button :action 
         (fn [e]
-            (async/put! actions
+            (put! actions
                 {:type :add-address
                  :from parent
                  :to (value address)

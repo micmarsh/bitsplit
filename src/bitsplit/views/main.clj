@@ -1,8 +1,9 @@
 (ns bitsplit.views.main
     (:use seesaw.core
-        [bitsplit.views.list :only (entry->ui)]
+        [bitsplit.views.list :only (entry->ui new-addresses)]
+        [bitsplit.views.utils :only (map-list)]
         [bitsplit.mock :only (sample-data)])
-    (:require [clojure.core.async :refer [<!] :as async]))
+    (:require [clojure.core.async :refer (go chan <!)]))
 
 (defn splits->ui [actions splits]
     (->> splits
@@ -17,17 +18,17 @@
                     (new-addresses percentages)))))
 
 (defn start-ui! [initial changes]
-    (let [actions (async/chan)
+    (let [actions (chan)
           ui (splits->ui actions initial)
           main (frame
                 :size [400 :by 500]
                 :title "Bitsplit"
                 :content ui)]
           (show! main)
-          (async/go (while true
+          (go (while true
                 (let [change (<! changes)]
                     (apply-change ui change))))
           actions))
 
-(def start! #(start-ui! (sample-data) (async/chan)))
+(def start! #(start-ui! (sample-data) (chan)))
 
