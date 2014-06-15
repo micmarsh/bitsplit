@@ -1,18 +1,9 @@
 (ns bitsplit.clients.bitcoind
-    (:use bitsplit.clients.protocol)
+    (:use bitsplit.clients.protocol
+          bitsplit.clients.utils)
     (:require [clj-btc.core :as btc]
               [bitsplit.calculate :refer [address-amounts]]
               [clojure.core.async :refer [chan put!]]))
-
-
-(defmacro thread-loop [& body]
-    `(.start (Thread. 
-        (fn [] 
-            (while true
-                ~@body)))))
-
-(defn thread-sleep [minutes]
-    (Thread/sleep (* minutes 1000 60)))
 
 (def INTERVAL 0.1)
 
