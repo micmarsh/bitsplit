@@ -48,7 +48,7 @@
         scrollable))
 
 (defn add-address [panel address percentage]
-    (let [list-items ((config panel :items) 1)
+    (let [list-items (second (config panel :items))
           new-items (conj list-items (percentage->ui [address percentage]))]
         (config! panel :items new-items)))
 
