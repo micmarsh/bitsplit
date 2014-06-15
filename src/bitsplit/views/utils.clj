@@ -1,6 +1,6 @@
 (ns bitsplit.views.utils
     (:use seesaw.core
-          [clojure.core.async :only (chan sub)]))
+          [clojure.core.async :only (chan sub go-loop <!)]))
 
 (def map-list 
     (comp 
@@ -16,6 +16,12 @@
     (let [channel (chan)]
         (sub changes type channel)
         channel))
+
+(defn dochan! [channel action!]
+    (go-loop [ ]
+        (if-let [item (<! channel)]
+            (action! item)
+            (recur))))
 
 (defn assoc-second [items thing]
     (let [head (first items)
