@@ -18,7 +18,7 @@
 
 (def INTERVAL 0.1);(/ 1 30))
 
-(defn -main [& [port]]
+(defn -main [ ]
     (try
         ; (thread-loop
         ;     (thread-sleep INTERVAL)
@@ -26,5 +26,6 @@
         ;           unspent (unspent-amounts client)]
         ;         (transfer/make-transfers! client percentages unspent)))
         ; (run-jetty app {:port (if port (Integer. port) 3026)})
+    (println "sup")
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))
