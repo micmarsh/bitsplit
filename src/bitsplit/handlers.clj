@@ -1,20 +1,10 @@
 (ns bitsplit.handlers
     (:use
         bitsplit.storage.protocol
-        bitsplit.storage.filesystem
         [clojure.core.async :only (go <! put!)])
     (:require [bitsplit.calculate :as calc]
               [bitsplit.clients.bitcoind :as rpc]))
 
-(defn mapmap [fn seq & others]
-    (into { } (apply map fn seq others)))
-
-(def storage 
-    (-> {:data (mapmap (fn [addr] [addr { }]) ["trololololo", "hello"]);;(rpc/list-addresses))
-         :location SPLITS_LOCATION
-         :persist? false}
-        map->BalancedFile
-        atom))
 
 (defn save! [storage params]
     (let [{:keys [from to percentage]} params]
@@ -34,11 +24,5 @@
                          :from (:from action)
                          :type :add-address}))))))
 
-
-(def list-all #(all @storage))
-
-(defn delete! [{{:keys [from to]} :params}]
-    (-> (swap! storage unsplit! from to)
-        :data 
-        str))
+(def list-all #(-> % deref all))
 

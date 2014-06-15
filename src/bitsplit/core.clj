@@ -1,10 +1,21 @@
 (ns bitsplit.core
   (:use compojure.core
         bitsplit.clients.bitcoind
+        bitsplit.storage.filesystem
         bitsplit.clients.protocol)
   (:require [bitsplit.handlers :as handlers]
             [bitsplit.transfer :as transfer]
             [bitsplit.views.main :as ui]))
+
+(defn mapmap [fn seq & others]
+    (into { } (apply map fn seq others)))
+
+(def storage 
+    (-> {:data (mapmap (fn [addr] [addr { }]) ["trololololo", "hello"]);;(rpc/list-addresses))
+         :location SPLITS_LOCATION
+         :persist? false}
+        map->BalancedFile
+        atom))
 
 (def client (->Bitcoind ""))
 
@@ -28,7 +39,7 @@
         ;         (transfer/make-transfers! client percentages unspent)))
         ; (run-jetty app {:port (if port (Integer. port) 3026)})
         (let [changes (clojure.core.async/chan)
-              actions (ui/start-ui! (handlers/list-all) changes)]
-              (handlers/handle-actions! handlers/storage actions changes))
+              actions (ui/start-ui! (handlers/list-all storage) changes)]
+              (handlers/handle-actions! storage actions changes))
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))
