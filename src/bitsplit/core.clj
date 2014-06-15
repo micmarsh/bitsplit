@@ -10,12 +10,11 @@
 (defn mapmap [fn seq & others]
     (into { } (apply map fn seq others)))
 
-(def storage 
+(defn make-storage [ ]
     (-> {:data (mapmap (fn [addr] [addr { }]) ["trololololo", "hello"]);;(rpc/list-addresses))
          :location SPLITS_LOCATION
          :persist? false}
-        map->BalancedFile
-        atom))
+        map->BalancedFile))
 
 (def client (->Bitcoind ""))
 
@@ -38,7 +37,8 @@
         ;           unspent (unspent-amounts client)]
         ;         (transfer/make-transfers! client percentages unspent)))
         ; (run-jetty app {:port (if port (Integer. port) 3026)})
-        (let [changes (clojure.core.async/chan)
+        (let [storage (atom (make-storage))
+              changes (clojure.core.async/chan)
               actions (ui/start-ui! (handlers/list-all storage) changes)]
               (handlers/handle-actions! storage actions changes))
     (catch java.net.ConnectException e 
