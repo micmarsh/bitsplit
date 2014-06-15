@@ -3,7 +3,8 @@
         bitsplit.clients.bitcoind
         bitsplit.clients.protocol)
   (:require [bitsplit.handlers :as handlers]
-            [bitsplit.transfer :as transfer]))
+            [bitsplit.transfer :as transfer]
+            [bitsplit.views.main :as ui]))
 
 (def client (->Bitcoind ""))
 
@@ -26,6 +27,8 @@
         ;           unspent (unspent-amounts client)]
         ;         (transfer/make-transfers! client percentages unspent)))
         ; (run-jetty app {:port (if port (Integer. port) 3026)})
-    (println "sup")
+        (let [changes (clojure.core.async/chan)
+              actions (ui/start-ui! (handlers/list-all) changes)]
+              (handlers/handle-actions handlers/storage actions changes))
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))

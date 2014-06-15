@@ -1,7 +1,8 @@
 (ns bitsplit.handlers
     (:use
         bitsplit.storage.protocol
-        bitsplit.storage.filesystem)
+        bitsplit.storage.filesystem
+        [clojure.core.async :only (go <! put!)])
     (:require [bitsplit.calculate :as calc]
               [bitsplit.clients.bitcoind :as rpc]))
 
@@ -15,16 +16,24 @@
         map->BalancedFile
         atom))
 
-(defn list-all [req] (-> @storage all str))
-
-(defn save! [{params :params}]
-    (let [{:keys [from to]} params
-          percent (params "percentage")]
+(defn save! [storage params]
+    (let [{:keys [from to percentage]} params]
         (println @storage)
-        (->> (java.math.BigDecimal. percent)
+        (->> (java.math.BigDecimal. percentage)
             (swap! storage split! from to)
-            :data
-            str)))
+            :data)))
+
+(defn handle-actions! [storage actions changes]
+    (go (while true
+        (let [action (<! action)]
+            (condp = (:type action)
+                :add-address
+                    (put! changes
+                        ((save! storage action)
+                            (:from action))))))))
+
+
+(defn list-all [req] (all @storage)
 
 (defn delete! [{{:keys [from to]} :params}]
     (-> (swap! storage unsplit! from to)
