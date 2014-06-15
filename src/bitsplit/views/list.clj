@@ -19,7 +19,7 @@
                  :percentage (value percentage)})))
     button)
 
-(defn address-adder [actions parent percentage?]
+(defn address-adder [channels parent percentage?]
     (let [address (text "")
           percentage (text (if percentage? "" "1"))]
         (flow-panel :id (keyword (str parent "-adder"))
@@ -27,15 +27,15 @@
             address
             (when percentage? percentage)
             (->> (button :text "Add Address" )
-                (register-button actions address percentage parent))]))))
+                (register-button (:actions channels) address percentage parent))]))))
 
-(defn entry->ui [actions [address percentages]]
+(defn entry->ui [channels [address percentages]]
     (vertical-panel
        :id (keyword address)
        :items [
         (label address)
         (map-list percentage->ui percentages)
-        (address-adder actions address
+        (address-adder channels address
             (-> percentages empty? not))]))
 
 (def third #(-> % rest second))

@@ -5,9 +5,9 @@
         [bitsplit.mock :only (sample-data)])
     (:require [clojure.core.async :refer (go chan <!)]))
 
-(defn splits->ui [actions splits]
+(defn splits->ui [channels splits]
     (->> splits
-        (map-list (partial entry->ui actions))
+        (map-list (partial entry->ui channels))
         scrollable))
 
 (defn apply-change [root change]
@@ -19,7 +19,9 @@
 
 (defn start-ui! [initial changes]
     (let [actions (chan)
-          ui (splits->ui actions initial)
+          channels {:changes (sub changes :type)
+                    :actions actions}
+          ui (splits->ui channels initial)
           main (frame
                 :size [400 :by 500]
                 :title "Bitsplit"
