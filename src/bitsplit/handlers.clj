@@ -29,11 +29,13 @@
             (condp = (:type action)
                 :add-address
                     (put! changes
-                        ((save! storage action)
-                            (:from action))))))))
+                        {:percentages ((save! storage action)
+                                            (:from action))
+                         :from (:from action)
+                         :type :add-address}))))))
 
 
-(defn list-all [req] (all @storage))
+(def list-all #(all @storage))
 
 (defn delete! [{{:keys [from to]} :params}]
     (-> (swap! storage unsplit! from to)
