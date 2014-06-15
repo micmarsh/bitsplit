@@ -20,15 +20,15 @@
     button)
 
 (defn form-items [channels parent percentage?]
-    (let [address (text "")
-          percentage (text (if percentage? "" "1"))]
+    (let [address (text :columns 20)
+          percentage (text :columns 3 :text (if percentage? "" "1"))]
           (compact [ 
             address
             (when percentage? percentage)
             (->> (button :text "Add Address" )
                 (register-button (:actions channels) address percentage parent))])))
 (defn address-adder [channels parent percentage?]
-    (flow-panel 
+    (flow-panel
           :items (form-items channels parent percentage?)))
 
 (defn entry->ui [channels [address percentages]]
