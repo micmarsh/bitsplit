@@ -1,31 +1,11 @@
 (ns bitsplit.core
   (:use compojure.core
         bitsplit.clients.bitcoind
-        bitsplit.clients.protocol
-        [ring.middleware.params :only (wrap-params)]
-        [ring.middleware.resource :only (wrap-resource)]
-        [ring.adapter.jetty :only (run-jetty)]
-        [ring.util.response :only (redirect)])
-  (:require [compojure.route :as route]
-            [bitsplit.handlers :as handlers]
-            [clojure.data.json :as json]
-
-            [bitsplit.transfer :as transfer])
-  (:gen-class))
-
-(defroutes app-routes
-    (GET "/" [] (clojure.java.io/resource "client/index.html"))
-    (GET "/splits" [] handlers/list-all)
-    (POST "/splits/:from/:to" [] handlers/save!)
-    (DELETE "/splits/:from/:to" [] handlers/delete!)
-    (route/not-found "<h1>Page not found</h1>"))
+        bitsplit.clients.protocol)
+  (:require [bitsplit.handlers :as handlers]
+            [bitsplit.transfer :as transfer]))
 
 (def client (->Bitcoind ""))
-
-; really should use liberator
-(def app (-> app-routes
-            (wrap-resource "client")
-            wrap-params))
 
 (defmacro thread-loop [& body]
     `(.start (Thread. 
