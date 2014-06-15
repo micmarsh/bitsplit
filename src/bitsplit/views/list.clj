@@ -49,6 +49,6 @@
             ))    
     (vertical-panel
        :items [
-        (label address)
+        (label :text address :h-text-position :left)
         addr-list
         address-form])))
