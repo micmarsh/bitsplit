@@ -1,5 +1,6 @@
 (ns bitsplit.storage.filesystem
-    (:use bitsplit.storage.protocol))
+    (:use bitsplit.storage.protocol)
+    (:require [bitsplit.calculate :as calc]))
 
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.bitcoin/bitsplit/"))
