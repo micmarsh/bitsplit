@@ -1,6 +1,6 @@
 (ns bitsplit.views.main
     (:use seesaw.core
-        [bitsplit.views.list :only (entry->ui new-addresses)]
+        [bitsplit.views.list :only (entry->ui)]
         [bitsplit.views.utils :only (map-list)]
         [bitsplit.mock :only (sample-data)])
     (:require [clojure.core.async :refer (go chan <! pub)]))

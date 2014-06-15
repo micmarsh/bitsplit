@@ -20,8 +20,8 @@
 (defn dochan! [channel action!]
     (go-loop [ ]
         (if-let [item (<! channel)]
-            (action! item)
-            (recur))))
+            (action! item))
+        (recur)))
 
 (defn assoc-second [items thing]
     (let [head (first items)

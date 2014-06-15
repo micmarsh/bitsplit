@@ -8,7 +8,6 @@
 
 (defn save! [storage params]
     (let [{:keys [from to percentage]} params]
-        (println @storage)
         (->> (java.math.BigDecimal. percentage)
             (swap! storage split! from to)
             :data)))

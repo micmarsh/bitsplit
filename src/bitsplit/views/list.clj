@@ -34,8 +34,10 @@
         changes (get-changes channels :add-address)]
     (dochan! changes 
         (fn [{:keys [percentages from]}]
+          (println percentages from)
+          (when (= from address)
             (config! addr-list :items
-                (map percentage->ui percentages))))    
+                (map percentage->ui percentages)))))    
     (vertical-panel
        :id (keyword address)
        :items [
