@@ -7,10 +7,10 @@
 
 (defn splits->ui [channels splits]
     (->> splits
-        (map-list (partial entry->ui channels))
-        scrollable))
+        (map-list (partial entry->ui channels))))
 
 (defn start-ui! [initial changes]
+    (native!)
     (let [actions (chan)
           channels {:changes (pub changes :type)
                     :actions actions}

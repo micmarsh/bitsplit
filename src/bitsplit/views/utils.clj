@@ -4,7 +4,7 @@
 
 (def map-list 
     (comp 
-        (partial vertical-panel :items) 
+        (partial grid-panel :columns 1 :items) 
         map))
 
 (defn insert-second [[head & tail] thing]

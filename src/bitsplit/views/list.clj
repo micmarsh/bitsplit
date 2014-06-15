@@ -34,7 +34,8 @@
 (defn entry->ui [channels [address percentages]]
   (let [addr-list (map-list percentage->ui percentages)
         address-form (address-adder channels address (-> percentages empty? not))
-        changes (get-changes channels :add-address)]
+        changes (get-changes channels :add-address)
+        errors (get-changes channels :adding-error)]
     (dochan! changes 
         (fn [{:keys [percentages from]}]
           (when (= from address)
@@ -42,7 +43,10 @@
                 (map percentage->ui percentages))
             (config! address-form :items
                 (form-items channels address (-> percentages empty? not)))
-            )))    
+            )))
+    (dochan! errors
+        (fn [{errors :errors}]
+            ))    
     (vertical-panel
        :items [
         (label address)
