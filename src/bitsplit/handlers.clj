@@ -25,7 +25,7 @@
 
 (defn handle-actions! [storage actions changes]
     (go (while true
-        (let [action (<! action)]
+        (let [action (<! actions)]
             (condp = (:type action)
                 :add-address
                     (put! changes
@@ -33,7 +33,7 @@
                             (:from action))))))))
 
 
-(defn list-all [req] (all @storage)
+(defn list-all [req] (all @storage))
 
 (defn delete! [{{:keys [from to]} :params}]
     (-> (swap! storage unsplit! from to)

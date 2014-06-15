@@ -29,6 +29,6 @@
         ; (run-jetty app {:port (if port (Integer. port) 3026)})
         (let [changes (clojure.core.async/chan)
               actions (ui/start-ui! (handlers/list-all) changes)]
-              (handlers/handle-actions handlers/storage actions changes))
+              (handlers/handle-actions! handlers/storage actions changes))
     (catch java.net.ConnectException e 
         (println "You need a running bitcoind instance!"))))
