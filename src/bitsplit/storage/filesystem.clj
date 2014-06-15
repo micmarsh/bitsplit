@@ -17,25 +17,24 @@
             ; but oh well
             default))))
 
-(defrecord SplitFile [splits location persist?] 
+(defprotocol Finishable
+    (finish [this data]))
+
+(defrecord BalancedFile [data location persist?]
     IStorage
     (all [this]
-        (if persist?
-            (try-file location splits)
-            splits))
+        (if persist? 
+            (try-file location data)
+            data))
     (split! [this from to percentage]
-        (let [percentages (get splits from { })
-              new-percents (assoc percentages to percentage)
-              new-file (assoc splits from new-percents)]
-            (when persist? 
-                (spit location new-file))
-            (assoc this :splits new-file)))
+        (let [new-splits (calc/save-split data from to percentage)]
+            (finish this new-splits)))
     (unsplit! [this from to]
-        (let [percentages (get splits from { })
-              new-percents (dissoc percentages to)
-              new-file (if (empty? new-percents)
-                           (dissoc splits from)
-                           (assoc splits from new-percents))]
-            (when persist? 
-                (spit location new-file))
-            (assoc this :splits new-file))))
+        (let [new-splits (calc/delete-split data from to)]
+            (finish this new-splits)))
+
+    Finishable
+    (finish [this new-splits]
+        (when persist?
+            (spit location new-splits))
+        (assoc this :data new-splits)))
