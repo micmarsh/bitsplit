@@ -19,7 +19,7 @@
             :account account)))
 
 (defrecord Bitcoind [account]
-    BitsplitClient
+    Queries
     (addresses [this]
         (list-addresses account))
     (unspent-amounts [this]
@@ -36,6 +36,7 @@
                     (when (-> unspent empty? not)
                         (put! return unspent))))
             return))
+    Operations
     (send-amounts! [this amounts]
         (btc/sendmany
             :fromaccount account

@@ -1,8 +1,10 @@
 (ns bitsplit.clients.protocol)
 
-(defprotocol BitsplitClient
+(defprotocol Queries
     (addresses [this])
-    (new-address! [this])
     (unspent-amounts [this])
-    (unspent-channel [this])
+    (unspent-channel [this]))
+
+(defprotocol Operations
+    (new-address! [this])
     (send-amounts! [this amounts]))

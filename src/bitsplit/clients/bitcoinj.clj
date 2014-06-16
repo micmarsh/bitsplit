@@ -3,10 +3,10 @@
           bitsplit.clients.protocol
           [clojure.core.async :only (put! chan)]))
 
-(def emap (comp doall map))
+(def eager-map (comp doall map))
 
 (defrecord Bitcoinj [wallet]
-    BitsplitClient
+    Queries
     (addresses [this]
         (my-addresses wallet))
     (unspent-amounts [this] { })
@@ -17,10 +17,11 @@
                     (println tx balance)
                     (put! return nil)))
             return))
+    Operations
     (send-amounts! [this amounts]
         ; won't be too slow if this is
         ; as evented as expected
-        (emap 
+        (eager-map 
             (fn [[to amount]]
                 (send-coins wallet to amount))
                     amounts))
