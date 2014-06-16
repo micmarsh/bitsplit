@@ -1,7 +1,7 @@
 (ns bitsplit.clients.bitcoinj
     (:use bitcoin.core
           bitsplit.clients.protocol
-          [clojure.core.set :only [intersection]]
+          [clojure.set :only (intersection)]
           [clojure.core.async :only (put! chan)]))
 
 (def eager-map (comp doall map))
@@ -30,8 +30,8 @@
                 (send-coins wallet to amount))
                     amounts))
     (new-address! [this]
-        (let [kp (create-keypair)]
-            (->address kp))))
+        (let [keypair (create-keypair)]
+            (-> keypair ->address str))))
 
 (defn new-wallet 
     ([] (new-wallet true))
