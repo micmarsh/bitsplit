@@ -1,7 +1,7 @@
 (ns bitsplit.clients.bitcoinj
     (:use bitcoin.core
-          clojure.core.async
-          bitsplit.clients.protocol))
+          bitsplit.clients.protocol
+          [clojure.core.async :only (put! chan)]))
 
 (def emap (comp doall map))
 
@@ -12,15 +12,25 @@
         (let [return (chan)]
             (on-coins-received wallet
                 (fn [tx prev balance]
-                    (put! return nil)))))
-    (send-many! [this amounts]
+                    (println tx balance)
+                    (put! return nil)))
+            return))
+    (send-amounts! [this amounts]
+        ; won't be too slow if this is
+        ; as evented as expected
         (emap 
             (fn [[to amount]]
                 (send-coins wallet to amount))
                     amounts))
     (new-address! [this]
         (let [kp (create-keypair)]
-            (kp->address kp))))
+            (->address kp))))
 
-
+(defn new-wallet 
+    ([] (new-wallet true))
+    ([test?] 
+        (create-wallet 
+            (if test?
+                (testNet)
+                (prodNet)))))
 

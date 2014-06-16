@@ -1,6 +1,6 @@
 (ns bitsplit.core
   (:use compojure.core
-        bitsplit.clients.bitcoind
+        bitsplit.clients.bitcoinj
         bitsplit.storage.filesystem
         bitsplit.clients.protocol)
   (:require [bitsplit.handlers :as handlers]
@@ -16,7 +16,7 @@
          :persist? false}
         map->BalancedFile))
 
-(def client (->Bitcoind ""))
+(def client (->Bitcoinj (new-wallet)))
 
 (defn -main [ ]
     (try
