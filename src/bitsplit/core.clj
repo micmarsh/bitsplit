@@ -11,7 +11,7 @@
     (into { } (apply map fn seq others)))
 
 (defn make-storage [client]
-    (-> {:data (mapmap (fn [addr] [addr { }]) (addresses client))
+    (-> {:data (mapmap (fn [addr] [addr { }]) (addresses client)) ; less neccesary once this is reading from persistence
          :location SPLITS_LOCATION
          :persist? false}
         map->BalancedFile))

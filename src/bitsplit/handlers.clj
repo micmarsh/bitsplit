@@ -1,10 +1,7 @@
 (ns bitsplit.handlers
     (:use
         bitsplit.storage.protocol
-        [clojure.core.async :only (go <! put!)])
-    (:require [bitsplit.calculate :as calc]
-              [bitsplit.clients.bitcoind :as rpc]))
-
+        [clojure.core.async :only (go <! put!)]))
 
 (defn save! [storage params]
     (let [{:keys [from to percentage]} params]

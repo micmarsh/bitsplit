@@ -1,6 +1,7 @@
 (ns bitsplit.clients.bitcoinj
     (:use bitcoin.core
           bitsplit.clients.protocol
+          [clojure.core.set :only [intersection]]
           [clojure.core.async :only (put! chan)]))
 
 (def eager-map (comp doall map))
@@ -14,6 +15,9 @@
         (let [return (chan)]
             (on-coins-received wallet
                 (fn [tx prev balance]
+                    ; just need to check out tx, since this: (intersection (set (my-addresses wallet)) (to-addresses tx)))
+                    ; looks okay but doesn't say the amount that went to each
+                    ; just check tutorial!
                     (println tx balance)
                     (put! return nil)))
             return))
