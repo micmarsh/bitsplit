@@ -20,6 +20,8 @@
 
 (defrecord Bitcoind [account]
     BitsplitClient
+    (addresses [this]
+        (list-addresses account))
     (unspent-amounts [this]
         (let [unspent-tx (list-unspent)
               addresses (-> account list-addresses set)

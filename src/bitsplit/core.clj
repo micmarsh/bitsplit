@@ -10,8 +10,8 @@
 (defn mapmap [fn seq & others]
     (into { } (apply map fn seq others)))
 
-(defn make-storage [ ]
-    (-> {:data (mapmap (fn [addr] [addr { }]) ["trololololo", "hello"]);;(rpc/list-addresses))
+(defn make-storage [client]
+    (-> {:data (mapmap (fn [addr] [addr { }]) (addresses client))
          :location SPLITS_LOCATION
          :persist? false}
         map->BalancedFile))
@@ -20,7 +20,7 @@
 
 (defn -main [ ]
     (try
-        (let [storage (atom (make-storage))
+        (let [storage (atom (make-storage client))
               changes (clojure.core.async/chan)
               actions (ui/start-ui! (handlers/list-all storage) changes)
               unspents (unspent-channel client)]

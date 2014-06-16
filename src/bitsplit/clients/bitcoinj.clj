@@ -7,6 +7,8 @@
 
 (defrecord Bitcoinj [wallet]
     BitsplitClient
+    (addresses [this]
+        (my-addresses wallet))
     (unspent-amounts [this] { })
     (unspent-channel [this]
         (let [return (chan)]
