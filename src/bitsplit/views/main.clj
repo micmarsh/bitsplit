@@ -6,8 +6,13 @@
     (:require [clojure.core.async :refer (go chan <! pub)]))
 
 (defn splits->ui [channels splits]
-    (->> splits
-        (map-list (partial entry->ui channels))))
+    (top-bottom-split
+        (map-list (partial entry->ui channels) splits)
+        (left-right-split
+            (text "")
+            (button :text "Generate Address")
+            :divider-location 4/6)
+        :divider-location 5/6))
 
 (defn start-ui! [initial changes]
     (native!)
@@ -23,4 +28,3 @@
           actions))
 
 (def start! #(start-ui! (sample-data) (chan)))
-
