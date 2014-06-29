@@ -44,9 +44,15 @@
             address)))
 
 (defn load-wallet 
-    ([] (new-wallet "bitsplit.wallet" true))
+    ([] (load-wallet "bitsplit.wallet" true))
     ([name test?] 
         (when test?
             (use-test-net))
-        (open-wallet name)))
+        (let [wallet (open-wallet name)
+              file (java.io.File. name)
+              delay 500
+              millis java.util.concurrent.TimeUnit/MILLISECONDS]
+            (.autosaveToFile wallet
+                file delay millis nil)
+            wallet)))
 
