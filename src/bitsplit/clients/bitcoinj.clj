@@ -50,9 +50,13 @@
             (use-test-net))
         (let [wallet (open-wallet name)
               file (java.io.File. name)
-              delay 500
+              delay 0
               millis java.util.concurrent.TimeUnit/MILLISECONDS]
             (.autosaveToFile wallet
-                file delay millis nil)
+                file delay millis 
+                    (proxy [com.google.bitcoin.wallet.WalletFiles$Listener]
+                        [] (onAfterAutoSave [saved] (println "yay saved") 
+                                (println (.getAbsolutePaht saved)))
+                           (onBeforeAutoSave [saved] (println "yay before saving"))))
             wallet)))
 
