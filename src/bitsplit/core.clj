@@ -1,5 +1,5 @@
 (ns bitsplit.core
-  (:use bitsplit.clients.bitcoind
+  (:use bitsplit.clients.bitcoinj
         bitsplit.storage.filesystem
         bitsplit.clients.protocol)
   (:require [bitsplit.handlers :as handlers]
@@ -16,12 +16,12 @@
         map->BalancedFile))
 
 (defn -main [ & [mode] ]
-        (let [client (->Bitcoind "")
+        (let [client (->Bitcoinj (new-wallet))
               storage (atom (make-storage client))
               changes (clojure.core.async/chan)
               unspents (unspent-channel client)]
             (if (= mode "headless")
-                (println "Starting Bisplit Process...")
+                (println "Starting Bitsplit Process...")
                 (let [actions (ui/start-ui! (handlers/list-all storage) changes)]
                   (println "Starting Bitsplit UI...")
                   (handlers/handle-actions! storage actions changes)))
