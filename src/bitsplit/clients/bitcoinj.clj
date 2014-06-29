@@ -38,15 +38,15 @@
                 (send-coins wallet to amount))
                     amounts))
     (new-address! [this]
-        (let [keypair (create-keypair)]
-            (-> keypair ->address str))))
+        (let [keypair (create-keypair)
+              address (-> keypair ->address str)]
+            (add-keypair wallet keypair)
+            address)))
 
-(defn new-wallet 
-    ([] (new-wallet true))
-    ([test?] 
-        (create-wallet 
-            (if test?
-                (do (use-test-net) 
-                    (testNet))
-                (prodNet)))))
+(defn load-wallet 
+    ([] (new-wallet "bitsplit.wallet" true))
+    ([name test?] 
+        (when test?
+            (use-test-net))
+        (open-wallet name)))
 

@@ -16,7 +16,7 @@
         map->BalancedFile))
 
 (defn -main [ & [mode] ]
-        (let [client (->Bitcoinj (new-wallet))
+        (let [client (->Bitcoinj (load-wallet))
               storage (atom (make-storage client))
               changes (clojure.core.async/chan)
               unspents (unspent-channel client)]

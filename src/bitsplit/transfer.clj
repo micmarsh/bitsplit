@@ -10,6 +10,7 @@
          (send-amounts! client)))
           
 (defn handle-unspents! [client storage unspents]
+    (println (new-address! client))
     (go (while true
         (let [unspent (<! unspents)
               percentages (all @storage)]
