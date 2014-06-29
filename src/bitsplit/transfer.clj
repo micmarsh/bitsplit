@@ -13,4 +13,5 @@
     (go (while true
         (let [unspent (<! unspents)
               percentages (all @storage)]
+            (println "woah coins!" unspent)
             (make-transfers! client percentages unspent)))))

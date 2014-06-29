@@ -46,6 +46,7 @@
     ([test?] 
         (create-wallet 
             (if test?
-                (testNet)
+                (do (use-test-net) 
+                    (testNet))
                 (prodNet)))))
 

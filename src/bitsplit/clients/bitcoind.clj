@@ -24,7 +24,9 @@
         (list-addresses account))
     (unspent-amounts [this]
         (let [unspent-tx (list-unspent)
+              n (println "sup unspent txs" unspent-tx)
               addresses (-> account list-addresses set)
+              m (println "we got addresses" addresses)
               account-address? #(contains? addresses (% "address"))]
             (->> unspent-tx
                 (filter account-address?)
@@ -32,8 +34,10 @@
     (unspent-channel [this]
         (let [return (chan)]
             (thread-interval INTERVAL
+                (println "checking for unspent coins")
                 (let [unspent (unspent-amounts this)]
                     (when (-> unspent empty? not)
+                        (println "found some coins" unspent)
                         (put! return unspent))))
             return))
     Operations

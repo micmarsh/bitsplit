@@ -1,6 +1,5 @@
 (ns bitsplit.core
-  (:use compojure.core
-        bitsplit.clients.bitcoinj
+  (:use bitsplit.clients.bitcoind
         bitsplit.storage.filesystem
         bitsplit.clients.protocol)
   (:require [bitsplit.handlers :as handlers]
@@ -16,15 +15,14 @@
          :persist? false}
         map->BalancedFile))
 
-(def client (->Bitcoinj (new-wallet)))
-
-(defn -main [ ]
-    (try
-        (let [storage (atom (make-storage client))
+(defn -main [ & [mode] ]
+        (let [client (->Bitcoind "")
+              storage (atom (make-storage client))
               changes (clojure.core.async/chan)
-              actions (ui/start-ui! (handlers/list-all storage) changes)
               unspents (unspent-channel client)]
-              (transfer/handle-unspents! client storage unspents)
-              (handlers/handle-actions! storage actions changes))
-    (catch java.net.ConnectException e 
-        (println "You need a running bitcoind instance!"))))
+            (if (= mode "headless")
+                (println "Starting Bisplit Process...")
+                (let [actions (ui/start-ui! (handlers/list-all storage) changes)]
+                  (println "Starting Bitsplit UI...")
+                  (handlers/handle-actions! storage actions changes)))
+            (transfer/handle-unspents! client storage unspents)))
