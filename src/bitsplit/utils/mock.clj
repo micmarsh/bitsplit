@@ -1,5 +1,4 @@
-(ns bitsplit.mock
-    (:use [bitsplit.clients.bitcoind :only (list-unspent)]))
+(ns bitsplit.utils.mock)
 
 (def set1 #{"ms6dXVXFBfwriUZaLACsRSYku8nc3rQNRe"
             "mt6hkAZtLWCXaWw5GN6CQpq2VF3hjbAtMc"
