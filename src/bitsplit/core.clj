@@ -5,7 +5,7 @@
   (:require [bitsplit.transfer :as transfer]
             [bitsplit.utils.calculate :as calc]))
 
-(defn modify-address! [modifier storage {:keys [parent address percent]}]
+(defn- modify-address! [modifier storage {:keys [parent address percent]}]
     (let [existing (lookup storage parent)
             adjusted (if percent 
                         (modifier existing address percent)
