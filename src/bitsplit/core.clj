@@ -22,15 +22,15 @@
                          :from (:from action)
                          :type :add-address}))))))s
 
-(defn add-address [storage {:keys [parent address percent]}])
+(defn add-address! [storage {:keys [parent address percent]}])
 
-(defn remove-address [storage {:keys [parent address]}])
+(defn remove-address! [storage {:keys [parent address]}])
 
-(defn new-split [storage client {:keys [children]}])
+(defn new-split! [storage client {:keys [children]}])
 
-(defn remove-split [storage {:keys [split]}])
+(defn remove-split! [storage {:keys [split]}])
 
-(defn edit-address [storage {:keys [parent address percent]}])
+(defn edit-address! [storage {:keys [parent address percent]}])
 
 (defn list-all [storage])
 
