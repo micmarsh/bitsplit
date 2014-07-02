@@ -19,3 +19,8 @@ Whatever the UI is, it will be sending "action" objects of the schema `{:type :k
 
 Since `:split` provides so much info, it may be worth it to provide some kind of map diffing utils to aid in making minimum changes in nasty OO type UIs.
 
+## A Better Idea
+Define all of these things as *synchronous* methods first, then defining this async API will be an extremely simple matter of subscribing to a `:type` and "piping" `actions` "through" the appropriate function, into changes.
+
+### macro for super flexible functions:
+`defkw` using a vector of args defines a function that can take either the given arguments in order, a single map of the keyword->value of the args, *or* btc-clj style "spread out" map. Don't actually do this yet, just define methods as taking kwargs (Prismatic's defnk might be handy for this)
