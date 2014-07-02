@@ -13,7 +13,7 @@ Whatever the UI is, it will be sending "action" objects of the schema `{:type :k
 * `:list-all` triggers an `:all` response
 
 ### Ch-Ch-Ch-Changes
-* `:split` provides `:split` (top-level address) and `{:addresses {"addr1" decM, ...}} with all info needed to re-render a given split. Returned after a `:add-address`, `:remove-address`, `:new-split`, or `:edit-address`
+* `:split` provides `:split` (top-level address) and `{:addresses {"addr1" decM, ...}}` with all info needed to re-render a given split. Returned after a `:add-address`, `:remove-address`, `:new-split`, or `:edit-address`
 * `:unsplit` provides `:split`, telling you which split to remove from the UI
 * `:all` not actually a "change", but provides the `{"split1" {"addr1" number ... } ... }` of all relevant info
 
