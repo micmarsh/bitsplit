@@ -1,6 +1,7 @@
 (ns bitsplit.core
-  (:use  bitsplit.storage.filesystem
-        bitsplit.clients.protocol)
+  (:use bitsplit.storage.protocol
+        bitsplit.clients.protocol
+        [clojure.core.async :only (go put! <!)])
   (:require [bitsplit.handlers :as handlers]
             [bitsplit.transfer :as transfer]))
 
