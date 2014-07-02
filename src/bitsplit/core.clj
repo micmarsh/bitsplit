@@ -30,5 +30,17 @@
 
 (def list-all all)
 
+(defn- make-transfers! [client percentages unspent]
+    (->> unspent
+         (calc/build-totals percentages)
+         (send-amounts! client)))
+          
+(defn handle-unspents! [client storage unspents]
+    (go (while true
+        (let [unspent (<! unspents)
+              percentages (all storage)]
+            (println "woah coins!" unspent)
+            (make-transfers! client percentages unspent)))))
+
 (defn -main [ & [mode] ]
     (println "sup")) 
