@@ -22,17 +22,17 @@
                          :from (:from action)
                          :type :add-address}))))))s
 
-(defn add-address [{:keys [parent address percent]}])
+(defn add-address [storage {:keys [parent address percent]}])
 
-(defn remove-address [{:keys [parent address]}])
+(defn remove-address [storage {:keys [parent address]}])
 
-(defn new-split [{:keys [children]}])
+(defn new-split [storage client {:keys [children]}])
 
-(defn remove-split [{:keys [split]}])
+(defn remove-split [storage {:keys [split]}])
 
-(defn edit-address [{:keys [parent address percent]}])
+(defn edit-address [storage {:keys [parent address percent]}])
 
-(defn list-all [])
+(defn list-all [storage])
 
 (defn -main [ & [mode] ]
     (println "sup")) 
