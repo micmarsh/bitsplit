@@ -20,7 +20,19 @@
                         {:percentages ((save! storage action)
                                             (:from action))
                          :from (:from action)
-                         :type :add-address}))))))
+                         :type :add-address}))))))s
+
+(defn add-address [{:keys [parent address percent]}])
+
+(defn remove-address [{:keys [parent address]}])
+
+(defn new-split [{:keys [children]}])
+
+(defn remove-split [{:keys [split]}])
+
+(defn edit-address [{:keys [parent address percent]}])
+
+(defn list-all [])
 
 (defn -main [ & [mode] ]
     (println "sup")) 
