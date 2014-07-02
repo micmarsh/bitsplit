@@ -10,7 +10,7 @@
          (send-amounts! client)))
           
 (defn handle-unspents! [client storage unspents]
-    (-> client new-address! println)
+    ; (-> client new-address! println)
     (println (addresses client))
     (go (while true
         (let [unspent (<! unspents)

@@ -18,8 +18,7 @@
             ; but oh well
             default))))
 
-(defprotocol Finishable
-    (finish [this data]))
+(defprotocol Finishable (finish [this data]))
 
 (defrecord BalancedFile [data location persist?]
     IStorage

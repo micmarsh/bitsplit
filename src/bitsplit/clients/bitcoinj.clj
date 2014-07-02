@@ -11,22 +11,24 @@
         ; 100% testNet for now
         [(testNet) (java.io.File. ".") "bitsplit"]
         (onSetupCompleted []
+            (println "setup of walletkit completed")
             (on-coins-received wallet
                 (fn [tx prev balance]
-                    ; just need to check out tx, since this: (intersection (set (my-addresses wallet)) (to-addresses tx)))
-                    ; looks okay but doesn't say the amount that went to each
-                    ; just check tutorial!
+                    ; wallet-tx->map looks super handy here
                     (println tx balance)
                     (put! channel nil))))))
 
-(defrecord Bitcoinj [wallet]
+(defrecord Bitcoinj [wallet-file]
     Queries
     (addresses [this]
-        (my-addresses wallet))
+        (->> wallet-file  
+             :wallet 
+             my-addresses
+             (map str)))
     (unspent-amounts [this] { })
     (unspent-channel [this]
         (let [return (chan)
-              kit (setup-appkit wallet return)]
+              kit (setup-appkit (:wallet wallet-file) return)]
             (.startAndWait kit)  
             return))
     Operations
@@ -35,12 +37,14 @@
         ; as evented as expected
         (eager-map 
             (fn [[to amount]]
-                (send-coins wallet to amount))
+                (send-coins (:wallet wallet-file) to amount))
                     amounts))
     (new-address! [this]
         (let [keypair (create-keypair)
-              address (-> keypair ->address str)]
+              address (-> keypair ->address str)
+              {:keys [wallet file]} wallet-file]
             (add-keypair wallet keypair)
+            (.saveToFile wallet file)
             address)))
 
 (defn load-wallet 
@@ -52,11 +56,11 @@
               file (java.io.File. name)
               delay 0
               millis java.util.concurrent.TimeUnit/MILLISECONDS]
-            (.autosaveToFile wallet
-                file delay millis 
-                    (proxy [com.google.bitcoin.wallet.WalletFiles$Listener]
-                        [] (onAfterAutoSave [saved] (println "yay saved") 
-                                (println (.getAbsolutePaht saved)))
-                           (onBeforeAutoSave [saved] (println "yay before saving"))))
-            wallet)))
+            ; (.autosaveToFile wallet
+            ;     file delay millis 
+            ;         (proxy [com.google.bitcoin.wallet.WalletFiles$Listener]
+            ;             [] (onAfterAutoSave [saved] (println "yay saved") 
+            ;                     (println (open-wallet saved)))
+            ;                (onBeforeAutoSave [saved] ())))
+            {:wallet wallet :file file})))
 

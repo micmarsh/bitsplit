@@ -24,9 +24,7 @@
         (list-addresses account))
     (unspent-amounts [this]
         (let [unspent-tx (list-unspent)
-              n (println "sup unspent txs" unspent-tx)
               addresses (-> account list-addresses set)
-              m (println "we got addresses" addresses)
               account-address? #(contains? addresses (% "address"))]
             (->> unspent-tx
                 (filter account-address?)
