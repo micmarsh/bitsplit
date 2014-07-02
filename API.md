@@ -7,7 +7,7 @@ Whatever the UI is, it will be sending "action" objects of the schema `{:type :k
 
 * `:add-address` add a new address to a given split, needs `:parent` and `:address` at minimum, can autofill/calculate `:percent`
 * `:remove-address` all the same as above, but doesn't use `:percent`
-* `:new-split` create a new address (or re-use idle removed ones?) from the client to send splits to, can optionally provide `{:children [...]}`, a seq containing a bunch of `:add-address` compatible maps if you want to populate your split right away
+* `:new-split` create a new address (or re-use idle removed ones?) from the client to send splits to.
 * `:remove-split` removes the given `:split` from storage records
 * `:edit-address` provide new `:percent` to a given `:address`
 * `:list-all` triggers an `:all` response

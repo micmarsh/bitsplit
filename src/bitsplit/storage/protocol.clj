@@ -8,4 +8,4 @@
     (delete! [store address]
         "Remove the given from - to address pair, returning the new split or an empty map")
     (save! [store address splits]
-            "Save the given set of splits and return {\"split\" {\"addr1\" percent ...}}"))
+        "Save the given set of splits and return {\"split\" {\"addr1\" percent ...}}"))
