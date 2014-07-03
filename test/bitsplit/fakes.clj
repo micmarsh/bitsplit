@@ -6,10 +6,7 @@
     Storage
     (all [_] @database-atom)
     (lookup [_ split] (@database-atom split))
-    (delete! [_ address]
-        (select-keys
-            (swap! database-atom dissoc address)
-                [address]))
+    (delete! [_ address] (swap! database-atom dissoc address))
     (save! [_ address splits] 
         (select-keys
             (swap! database-atom 
