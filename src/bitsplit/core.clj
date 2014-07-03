@@ -7,9 +7,9 @@
 
 (defn- modify-address! [modifier storage {:keys [parent address percent]}]
     (let [existing (lookup storage parent)
-            adjusted (if percent 
-                        (modifier existing address percent)
-                        (modifier existing address))]
+          adjusted (if percent 
+                      (modifier existing address percent)
+                      (modifier existing address))]
           (save! storage parent adjusted)))
 
 (def add-address! (partial modify-address! calc/save-percentage))

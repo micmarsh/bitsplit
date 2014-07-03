@@ -6,9 +6,16 @@
     Storage
     (all [_] @database-atom)
     (lookup [_ split] (@database-atom split))
-    (delete! [_ address] (swap! database-atom dissoc address))
-    (save! [_ address splits] (swap! database-atom 
-                                    assoc address splits)))
+    (delete! [_ address]
+        (select-keys
+            (swap! database-atom dissoc address)
+                [address]))
+    (save! [_ address splits] 
+        (select-keys
+            (swap! database-atom 
+                assoc address splits)
+                [address])))
+
 (defrecord FakeClient [addresses]
     Operations
     (new-address! [this]
