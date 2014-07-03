@@ -1,5 +1,5 @@
 (defproject bitsplit-core "0.1.0"
-  :description "FIXME: write description"
+  :description "Provides the core functions and protocols necessary for a bitsplit implementation"
   :url "http://github.com/micmarsh/bitsplit"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

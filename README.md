@@ -1,10 +1,10 @@
-# Bitsplit
+# Bitsplit Core
 
-Manage a shared Bitcoin address and distribute the profits as you choose. Starting as a desktop app, eventually to become a webservice.
+Functions and protocols for managing a Bitsplit instance. Implement the `client` and `storage` protocols, then use the functions provided in core to interact with them.
 
 ## Usage
 
-Clone it, yo (doesn't actually work yet)
+Get it: [bitsplit-core "0.1.0"]
 
 ## License
 
