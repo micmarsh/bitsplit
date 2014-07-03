@@ -11,13 +11,5 @@
         :dependencies [[org.clojure/test.check "0.5.8"]
                        [midje "1.6.3"]]
         :plugins [[lein-midje "3.0.0"]]
-
       }
-  }
-
-  :main bitsplit.core
-
-   ;; uberjar
-  :uberjar-name "bitsplit.jar"
-  :aot :all
-  :omit-source true)
+  })
