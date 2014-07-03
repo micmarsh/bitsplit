@@ -1,5 +1,5 @@
 (ns bitsplit.fakes
-    (:use bitsplit.clients.protocol
+    (:use bitsplit.client.protocol
           bitsplit.storage.protocol))
 
 (defrecord FakeStorage [database-atom]

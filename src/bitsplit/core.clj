@@ -1,6 +1,6 @@
 (ns bitsplit.core
   (:use bitsplit.storage.protocol
-        bitsplit.clients.protocol
+        bitsplit.client.protocol
         [clojure.core.async :only (go put! <!)])
   (:require [bitsplit.utils.calculate :as calc]))
 
