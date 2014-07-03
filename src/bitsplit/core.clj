@@ -1,28 +1,45 @@
 (ns bitsplit.core
-  (:use bitsplit.clients.bitcoind
-        bitsplit.storage.filesystem
-        bitsplit.clients.protocol)
-  (:require [bitsplit.handlers :as handlers]
-            [bitsplit.transfer :as transfer]
-            [bitsplit.views.main :as ui]))
+  (:use bitsplit.storage.protocol
+        bitsplit.clients.protocol
+        [clojure.core.async :only (go put! <!)])
+  (:require [bitsplit.utils.calculate :as calc]))
 
-(defn mapmap [fn seq & others]
-    (into { } (apply map fn seq others)))
+(defn- modify-address! [modifier storage {:keys [parent address percent]}]
+    (let [existing (lookup storage parent)
+          adjusted (if percent 
+                      (modifier existing address percent)
+                      (modifier existing address))]
+          (save! storage parent adjusted)))
 
-(defn make-storage [client]
-    (-> {:data (mapmap (fn [addr] [addr { }]) (addresses client)) ; less neccesary once this is reading from persistence
-         :location SPLITS_LOCATION
-         :persist? false}
-        map->BalancedFile))
+(def add-address! (partial modify-address! calc/save-percentage))
+    
+(def remove-address! (partial modify-address! calc/delete-percentage))
+
+(defn new-split! [storage client] 
+    (let [address (new-address! client)]
+        (save! storage address { })
+        address))
+
+(defn remove-split! [storage {:keys [split]}]
+    (delete! storage split)
+    split)
+
+(def edit-address! add-address!) ; maybe in the future each of these
+; can throw exceptions if they're not actually called the right way
+
+(def list-all all)
+
+(defn- make-transfers! [client percentages unspent]
+    (->> unspent
+         (calc/build-totals percentages)
+         (send-amounts! client)))
+          
+(defn handle-unspents! [client storage unspents]
+    (go (while true
+        (let [unspent (<! unspents)
+              percentages (all storage)]
+            (println "woah coins!" unspent)
+            (make-transfers! client percentages unspent)))))
 
 (defn -main [ & [mode] ]
-        (let [client (->Bitcoind "")
-              storage (atom (make-storage client))
-              changes (clojure.core.async/chan)
-              unspents (unspent-channel client)]
-            (if (= mode "headless")
-                (println "Starting Bitsplit Process...")
-                (let [actions (ui/start-ui! (handlers/list-all storage) changes)]
-                  (println "Starting Bitsplit UI...")
-                  (handlers/handle-actions! storage actions changes)))
-            (transfer/handle-unspents! client storage unspents))) 
+    (println "sup")) 

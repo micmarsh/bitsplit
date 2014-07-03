@@ -1,4 +1,4 @@
-(ns bitsplit.clients.utils)
+(ns bitsplit.utils.thread)
 
 (defmacro thread-loop [& body]
     `(.start (Thread. 

@@ -1,4 +1,4 @@
-(ns bitsplit.calculate)
+(ns bitsplit.utils.calculate)
 
 (def combine-sum (partial apply merge-with +))
 

@@ -5,7 +5,7 @@
         [clojure.test.check :as tc]
         [clojure.test.check.generators :as gen]
         [clojure.test.check.properties :as prop] 
-        [bitsplit.calculate :as calc]))
+        [bitsplit.utils.calculate :as calc]))
 
 (def gen-decimal (->> gen/s-pos-int
                     (gen/fmap (comp #(/ % 100) #(mod % 100)))
@@ -65,10 +65,9 @@
                  (reduce #(and %1 %2) true)))))
 
 (def blank-percent {"foobar" { "other" 1M } })
-(def sample-txs [
-    {"address" "foobar" "amount" 2M}
-    {"address" "woooo" "amount" 1M}
-  ])
+(def sample-txs 
+    {"foobar" 2M
+     "woooo"  1M})
 
 (fact "build totals works"
     (calc/build-totals blank-percent sample-txs)
