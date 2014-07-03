@@ -2,8 +2,7 @@
   (:use bitsplit.storage.protocol
         bitsplit.clients.protocol
         [clojure.core.async :only (go put! <!)])
-  (:require [bitsplit.transfer :as transfer]
-            [bitsplit.utils.calculate :as calc]))
+  (:require [bitsplit.utils.calculate :as calc]))
 
 (defn- modify-address! [modifier storage {:keys [parent address percent]}]
     (let [existing (lookup storage parent)
