@@ -1,4 +1,4 @@
-(defproject bitsplit-core "0.1.0"
+(defproject bitsplit-core "0.1.1"
   :description "Provides the core functions and protocols necessary for a bitsplit implementation"
   :url "http://github.com/micmarsh/bitsplit"
   :license {:name "Eclipse Public License"
