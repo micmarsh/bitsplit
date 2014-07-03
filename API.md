@@ -10,3 +10,4 @@ Since I'm not quite up to a native UI just yet (probably never will be) and the 
 * `remove-split` removes the given `:split` from storage records, returns the new full set of splits
 * `edit-address` provide new `:percent` to a given `:address`, returns the same as `add-address` above
 * `list-all` returns all the splits 
+* `handle-unspents!` takes a `bitsplit.client` implementation, and `bitsplit.storage` implemenation, and a channel providing unspent transactions in the form `{"address" amount ...}`, and handles all the forwarding
