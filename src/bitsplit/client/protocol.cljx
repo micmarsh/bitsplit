@@ -1,4 +1,4 @@
-(ns bitsplit.clients.protocol)
+(ns bitsplit.client.protocol)
 
 (defprotocol Queries
     (addresses [this])
