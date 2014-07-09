@@ -43,6 +43,3 @@
               percentages (store/all storage)]
             (println "woah coins!" unspent)
             (daemon/make-transfers! client percentages unspent)))))
-
-(defn -main [ & [mode] ]
-    (println "sup")) 

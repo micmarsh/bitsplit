@@ -32,7 +32,7 @@
            remaining 100]
         (if (= (count created) ( - total 1))
             (->> (conj created remaining)
-                (map #(#+clj java.math.BigDecimal. #+cljs js/Number %)
+                (map #(#+clj java.math.BigDecimal. #+cljs js/Number %))
                 shuffle)
             (let [new-amt (nrand 0 (-> remaining (* 2) (/ 3)))]
                 (recur 
