@@ -1,6 +1,6 @@
 (ns bitsplit.core
-  (:use bitsplit.storage.protocol
-        bitsplit.client.protocol
+  (:use [bitsplit.storage.protocol]
+        [bitsplit.client.protocol]
         #+clj [clojure.core.async :only (go put! <!)])
   #+cljs 
   (:use-macros 
