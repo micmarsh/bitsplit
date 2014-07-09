@@ -1,12 +1,15 @@
 (ns bitsplit.core
+  #+clj 
   (:use 
-      [clojure.core.async :only 
-        #+clj (go put! <!) #+cljs (put! <!)])
+      [clojure.core.async :only (go put! <!)])
+  #+cljs
+  (:use 
+    [cljs.core.async :only (put! <!)])
   #+cljs 
   (:use-macros 
-      [clojure.core.async.macros :only (go)])
+      [cljs.core.async.macros :only (go)])
   (:require [bitsplit.utils.calculate :as calc]
-             [bitsplit.storage.protocol :as store)]
+             [bitsplit.storage.protocol :as store]
             [bitsplit.client.protocol :as daemon]))
 
 (defn- modify-address! [modifier storage {:keys [parent address percent]}]
