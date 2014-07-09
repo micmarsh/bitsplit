@@ -27,7 +27,6 @@
                 {:source-paths ["src/bitsplit"]
                  :output-path "target/classes"
                  :rules :clj}
-
                 {:source-paths ["src/bitsplit"]
                  :output-path "target/classes"
                  :rules :cljs}
