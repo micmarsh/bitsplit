@@ -11,7 +11,26 @@
         :dependencies [[org.clojure/test.check "0.5.8"]
                        [midje "1.6.3"]]
         :plugins [[com.keminglabs/cljx "0.4.0"]
+                  [lein-cljsbuild "1.0.3"]
                   [lein-midje "3.0.0"]]
         :hooks [cljx.hooks]
-      }
-  })
+        :cljsbuild {
+          :builds [{
+              :source-paths ["target/cljs"]
+              :compiler {
+                :output-to "target/main.js"
+                :optimizations :whitespace
+                :pretty-print true}}
+        ]}
+        :cljx {
+          :builds [
+                {:source-paths ["src/bitsplit"]
+                 :output-path "target/classes"
+                 :rules :clj}
+
+                {:source-paths ["src/bitsplit"]
+                 :output-path "target/classes"
+                 :rules :cljs}
+        ]}
+    }
+})
