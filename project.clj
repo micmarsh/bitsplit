@@ -12,7 +12,8 @@
                        [midje "1.6.3"]]
         :plugins [[com.keminglabs/cljx "0.4.0"]
                   [lein-cljsbuild "1.0.3"]
-                  [lein-midje "3.0.0"]]
+                  [lein-midje "3.0.0"]
+                  [lein-npm "0.4.0"]]
         :hooks [cljx.hooks]
         :cljsbuild {
           :builds [{
