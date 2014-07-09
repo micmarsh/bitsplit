@@ -1,8 +1,10 @@
 (ns bitsplit.core
-  #+clj (:use [clojure.core.async :only (go put! <!)])
+  (:use 
+      [clojure.core.async :only 
+        #+clj (go put! <!) #+cljs (put! <!)])
   #+cljs 
   (:use-macros 
-      [clojure.core.async.macros :only (go put! <!)])
+      [clojure.core.async.macros :only (go)])
   (:require [bitsplit.utils.calculate :as calc]
              [bitsplit.storage.protocol :as store)]
             [bitsplit.client.protocol :as daemon]))
