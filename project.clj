@@ -10,6 +10,8 @@
     :dev {
         :dependencies [[org.clojure/test.check "0.5.8"]
                        [midje "1.6.3"]]
-        :plugins [[lein-midje "3.0.0"]]
+        :plugins [[com.keminglabs/cljx "0.4.0"]
+                  [lein-midje "3.0.0"]]
+        :hooks [cljx.hooks]
       }
   })
