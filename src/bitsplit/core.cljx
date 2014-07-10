@@ -43,8 +43,8 @@
          (daemon/send-amounts! client)))
           
 (defn handle-unspents! [client storage unspents]
-    (go (while true
-        (let [unspent (<! unspents)
-              percentages (store/all storage)]
+    (go (loop [unspent (<! unspents)]
+        (let [percentages (store/all storage)]
             (println "woah coins!" unspent)
-            (daemon/make-transfers! client percentages unspent)))))
+            (make-transfers! client percentages unspent)
+            (recur (<! unspents))))))
