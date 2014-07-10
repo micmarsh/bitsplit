@@ -8,17 +8,18 @@
   ; :main bitsplit.core
   :profiles {
     :dev {
-          :dependencies [[org.clojure/clojurescript "0.0-2268"]
-                         [org.clojure/test.check "0.5.8"]
-                         [midje "1.6.3"]]
+        :dependencies [[org.clojure/clojurescript "0.0-2268"]
+                       [org.clojure/test.check "0.5.8"]
+                       [midje "1.6.3"]]
 
         :plugins [[com.keminglabs/cljx "0.4.0"]
                   [lein-cljsbuild "1.0.3"]
                   [lein-midje "3.0.0"]]
+
         :hooks [cljx.hooks]
         :cljsbuild {
           :builds [{
-              :source-paths ["target/classes"]
+              :source-paths ["target/classes/cljs/"]
               :compiler {
                 :output-to "target/main.js"
                 :optimizations :whitespace
@@ -27,10 +28,10 @@
         :cljx {
           :builds [
                 {:source-paths ["src/bitsplit/"]
-                 :output-path "target/classes"
+                 :output-path "target/classes/clojure/bitsplit"
                  :rules :clj}
                 {:source-paths ["src/bitsplit/"]
-                 :output-path "target/classes"
+                 :output-path "target/classes/cljs/bitsplit"
                  :rules :cljs}
         ]}
     }
