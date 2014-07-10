@@ -4,7 +4,7 @@ Functions and protocols for managing a Bitsplit instance. Implement the `client`
 
 ## Usage
 
-Get it: `[bitsplit-core "0.1.2"]`
+Get it: `[bitsplit-core "0.1.6"]`
 
 ## License
 
