@@ -1,11 +1,13 @@
-(defproject bitsplit-core "0.1.3"
+(defproject bitsplit-core "0.1.6"
   :description "Provides the core functions and protocols necessary for a bitsplit implementation"
   :url "http://github.com/micmarsh/bitsplit"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [org.clojure/clojure "1.6.0"]]
-  ; :main bitsplit.core
+
+  :source-paths ["target/classes"]
+
   :profiles {
     :dev {
         :dependencies [[org.clojure/clojurescript "0.0-2268"]
@@ -19,7 +21,7 @@
         :hooks [cljx.hooks]
         :cljsbuild {
           :builds [{
-              :source-paths ["target/classes/cljs/"]
+              :source-paths ["target/cljs"]
               :compiler {
                 :output-to "target/main.js"
                 :optimizations :whitespace
@@ -28,10 +30,10 @@
         :cljx {
           :builds [
                 {:source-paths ["src/bitsplit/"]
-                 :output-path "target/classes/clojure/bitsplit"
+                 :output-path "target/classes/bitsplit"
                  :rules :clj}
                 {:source-paths ["src/bitsplit/"]
-                 :output-path "target/classes/cljs/bitsplit"
+                 :output-path "target/cljs/bitsplit"
                  :rules :cljs}
         ]}
     }

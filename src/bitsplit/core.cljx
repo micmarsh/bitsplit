@@ -19,9 +19,9 @@
                       (modifier existing address))]
           (store/save! storage parent adjusted)))
 
-(def add-address! (partial store/modify-address! calc/save-percentage))
+(def add-address! (partial modify-address! calc/save-percentage))
     
-(def remove-address! (partial store/modify-address! calc/delete-percentage))
+(def remove-address! (partial modify-address! calc/delete-percentage))
 
 (defn new-split! [storage client] 
     (let [address (daemon/new-address! client)]
