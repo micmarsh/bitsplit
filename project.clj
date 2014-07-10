@@ -1,4 +1,4 @@
-(defproject bitsplit-core "0.1.6"
+(defproject bitsplit-core "0.1.7"
   :description "Provides the core functions and protocols necessary for a bitsplit implementation"
   :url "http://github.com/micmarsh/bitsplit"
   :license {:name "Eclipse Public License"
@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [org.clojure/clojure "1.6.0"]]
 
-  :source-paths ["target/classes"]
+  :source-paths ["target/classes" "target/cljs"]
 
   :profiles {
     :dev {
