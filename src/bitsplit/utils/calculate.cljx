@@ -33,12 +33,12 @@
                     percentages)))))
 
 (defn build-totals [percentages amounts]
-    (->> percentages
-         (select-map amounts) 
-         (select-map percentages)
-         (divide-payments percentages)
-         vals
-         combine-sum))
+    (let [relevant-percentages (select-map amounts percentages)]
+        (->> amounts 
+             (select-map percentages)
+             (divide-payments relevant-percentages)
+             vals
+             combine-sum)))
 
 (defn save-percentage [data address percentage]
     {:pre [(<= percentage ONE)]}
