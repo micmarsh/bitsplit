@@ -33,7 +33,8 @@
                     percentages)))))
 
 (defn build-totals [percentages amounts]
-    (->> amounts 
+    (->> percentages
+         (select-map amounts) 
          (select-map percentages)
          (divide-payments percentages)
          vals
