@@ -6,23 +6,22 @@
 (def ZERO #+clj 0M #+cljs 0)
 
 (defn amount-map [tx] {(tx "address") (tx "amount")})
-(def address-amounts #(->> % (map amount-map) combine-sum)) 
+(def address-amounts #(->> % (map amount-map) combine-sum))
 
-(defn apply-percentages [divisions total-held]
-    (into { } 
-        (map (fn [[addr per]]
-            [addr (* per total-held)])
+(defn multiply-values [divisions total-held]
+    (into { }
+        (map (fn [[addr per]] [addr (* per total-held)])
         divisions)))
 
-(def divide-payments (partial merge-with apply-percentages))
+(def divide-payments (partial merge-with multiply-values))
 
-(defn select-map [submap supermap] 
+(defn select-map [submap supermap]
     (select-keys supermap (keys submap)))
 
 (defn apply-diff [diff percentages]
     (if (empty? percentages)
         percentages
-        (let [divisor (-> percentages count 
+        (let [divisor (-> percentages count
                           #+clj (java.math.BigDecimal.)
                           #+cljs js/Number)
              to-apply #+clj (with-precision 10 (/ diff divisor))
@@ -32,13 +31,13 @@
                         [addr (+ to-apply number)])
                     percentages)))))
 
-(defn build-totals [percentages amounts]
+(defn apply-percentages [percentages amounts]
     (let [relevant-percentages (select-map amounts percentages)]
-        (->> amounts 
-             (select-map percentages)
-             (divide-payments relevant-percentages)
-             vals
-             combine-sum)))
+      (->> amounts
+           (select-map percentages)
+           (divide-payments relevant-percentages))))
+
+(def build-totals (comp combine-sum vals apply-percentages))
 
 (defn save-percentage [data address percentage]
     {:pre [(<= percentage ONE)]}
