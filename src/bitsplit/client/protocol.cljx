@@ -7,5 +7,4 @@
 
 (defprotocol Operations
     (new-address! [this])
-    (send-amounts! [this amounts])
-    (send-splits! [this amounts]))
+    (send-amounts! [this amounts]))

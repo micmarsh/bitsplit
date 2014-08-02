@@ -1,12 +1,12 @@
 (ns bitsplit.core
-  #+clj 
-  (:use 
+  #+clj
+  (:use
       [clojure.core.async :only (go put! <!)])
   #+cljs
-  (:use 
+  (:use
     [cljs.core.async :only (put! <!)])
-  #+cljs 
-  (:use-macros 
+  #+cljs
+  (:use-macros
       [cljs.core.async.macros :only (go)])
   (:require [bitsplit.utils.calculate :as calc]
              [bitsplit.storage.protocol :as store]
@@ -14,16 +14,16 @@
 
 (defn- modify-address! [modifier storage {:keys [parent address percent]}]
     (let [existing (store/lookup storage parent)
-          adjusted (if percent 
+          adjusted (if percent
                       (modifier existing address percent)
                       (modifier existing address))]
           (store/save! storage parent adjusted)))
 
 (def add-address! (partial modify-address! calc/save-percentage))
-    
+
 (def remove-address! (partial modify-address! calc/delete-percentage))
 
-(defn new-split! [storage client] 
+(defn new-split! [storage client]
     (let [address (daemon/new-address! client)]
         (store/save! storage address { })
         address))
@@ -37,14 +37,15 @@
 
 (def list-all store/all)
 
-(defn- make-transfers! [client percentages unspent]
+(defn- make-transfers! [builder client percentages unspent]
     (->> unspent
-         (calc/build-totals percentages)
+         (builder percentages)
          (daemon/send-amounts! client)))
-          
-(defn handle-unspents! [client storage unspents]
+
+(defn handle-unspents! [builder client storage unspents]
+  (let [transfer! (partial make-transfers! builder)]
     (go (loop [unspent (<! unspents)]
         (let [percentages (store/all storage)]
-            (println "woah coins!" unspent)
-            (make-transfers! client percentages unspent)
-            (recur (<! unspents))))))
+          (println "woah coins!" unspent)
+          (transfer! client percentages unspent)
+          (recur (<! unspents)))))))
