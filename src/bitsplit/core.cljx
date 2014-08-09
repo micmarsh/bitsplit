@@ -1,13 +1,13 @@
 (ns bitsplit.core
   #+clj
   (:use
-      [clojure.core.async :only (go put! <!)])
+      [clojure.core.async :only (go-loop put! chan <!)])
   #+cljs
   (:use
-    [cljs.core.async :only (put! <!)])
+    [cljs.core.async :only (put! <! chan)])
   #+cljs
   (:use-macros
-      [cljs.core.async.macros :only (go)])
+      [cljs.core.async.macros :only (go-loop)])
   (:require [bitsplit.utils.calculate :as calc]
              [bitsplit.storage.protocol :as store]
             [bitsplit.client.protocol :as daemon]))
@@ -35,17 +35,13 @@
 (def edit-address! add-address!) ; maybe in the future each of these
 ; can throw exceptions if they're not actually called the right way
 
-(def list-all store/all)
-
-(defn- make-transfers! [builder client percentages unspent]
-    (->> unspent
-         (builder percentages)
-         (daemon/send-amounts! client)))
-
-(defn handle-unspents! [builder client storage unspents]
-  (let [transfer! (partial make-transfers! builder)]
-    (go (loop [unspent (<! unspents)]
-        (let [percentages (store/all storage)]
-          (println "woah coins!" unspent)
-          (transfer! client percentages unspent)
-          (recur (<! unspents)))))))
+(defn handle-unspents! [builder {:keys [client storage]}]
+  (let [unspent-channel (daemon/unspent-channel client)
+        results (chan)]
+    (go-loop [unspent (<! unspent-channel)]
+      (if-let [result (->> unspent
+                        (builder (store/all storage))
+                        (daemon/send-amounts! client))]
+        (put! results result))
+      (recur (<! unspent-channel)))
+    results))
