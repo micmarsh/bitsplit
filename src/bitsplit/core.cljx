@@ -39,12 +39,12 @@
   (let [unspent-channel (daemon/unspent-channel client)
         results (chan)]
     (go-loop [unspent (<! unspent-channel)]
-      (if-let [result (->> unspent
+      (when-let [result (->> unspent
                         (builder (store/all storage))
                         (daemon/send-amounts! client))]
-        (put! results
-          (if (chan? result)
-            (<! result)
-            result)))
+        (if (chan? result)
+          (when-let [thing (<! result)]
+            (put! results thing))
+          (put! results result)))
       (recur (<! unspent-channel)))
     results))
