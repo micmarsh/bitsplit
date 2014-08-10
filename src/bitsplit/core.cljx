@@ -1,10 +1,6 @@
 (ns bitsplit.core
-  #+clj
   (:use
-      [clojure.core.async :only (go-loop put! chan <!)])
-  #+cljs
-  (:use
-    [cljs.core.async :only (put! <! chan)])
+    [cljs.core.async :only (put! <! pipe chan #+clj go-loop)])
   #+cljs
   (:use-macros
       [cljs.core.async.macros :only (go-loop)])
@@ -35,6 +31,10 @@
 (def edit-address! add-address!) ; maybe in the future each of these
 ; can throw exceptions if they're not actually called the right way
 
+(def chan?
+  (let [chan-type (type (chan))]
+    (fn [thing] (= (type thing) chan-type))))
+
 (defn handle-unspents! [builder {:keys [client storage]}]
   (let [unspent-channel (daemon/unspent-channel client)
         results (chan)]
@@ -42,6 +42,8 @@
       (if-let [result (->> unspent
                         (builder (store/all storage))
                         (daemon/send-amounts! client))]
-        (put! results result))
-      (recur (<! unspent-channel)))
+        (if (chan? result)
+          (pipe result results)
+          (put! results result))
+        (recur (<! unspent-channel))))
     results))
