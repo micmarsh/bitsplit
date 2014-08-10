@@ -1,6 +1,6 @@
 (ns bitsplit.core
   (:use
-    [cljs.core.async :only (put! <! pipe chan #+clj go-loop)])
+    [cljs.core.async :only (put! <! chan #+clj go-loop)])
   #+cljs
   (:use-macros
       [cljs.core.async.macros :only (go-loop)])
@@ -42,8 +42,9 @@
       (if-let [result (->> unspent
                         (builder (store/all storage))
                         (daemon/send-amounts! client))]
-        (if (chan? result)
-          (pipe result results)
-          (put! results result))
+        (put! results
+          (if (chan? result)
+            (<! result)
+            result))
         (recur (<! unspent-channel))))
     results))
