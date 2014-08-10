@@ -45,6 +45,6 @@
         (put! results
           (if (chan? result)
             (<! result)
-            result))
-        (recur (<! unspent-channel))))
+            result)))
+      (recur (<! unspent-channel)))
     results))
